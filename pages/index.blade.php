@@ -14,6 +14,8 @@ new class extends Component
   <flux:text>Best Server for Gooners</flux:text>
   <flux:text>Better than Discord or Telegram</flux:text>
 
+  <flux:text>Version {{ config('app.version') }}</flux:text>
+
   <flux:spacer class="h-16" />
 
   <div class="flex gap-2">
