@@ -32,14 +32,14 @@ new class extends Component {
 ?>
 
 
-<flux:main container>
+<div>
   <flux:heading size="xl" level="1">Members</flux:heading>
   <flux:text class="mt-2 mb-6 text-base">Here's all your members</flux:text>
   <flux:separator variant="subtle" />
 
   <div class="flex flex-col">
     @foreach($this->users as $user)
-    <div class="flex justify-between hover:bg-zinc-50 dark:hover:bg-zinc-950 p-4">
+    <div class="flex justify-between hover:bg-zinc-50 dark:hover:bg-zinc-900 p-4">
       <div class="flex">
         <div class="mr-4">{{ $user->name }}</div>
 
@@ -55,7 +55,7 @@ new class extends Component {
         <flux:button size="xs" wire:click="delete({{ $user->id }})">Delete</flux:button>
         @else
         <flux:tooltip content="Cannot delete an admin account.">
-          <flux:button class="cursor-not-allowed" size="xs">Delete</flux:button>
+          <flux:button class="cursor-not-allowed opacity-30" size="xs">Delete</flux:button>
         </flux:tooltip>
         @endif
       </div>
@@ -64,4 +64,4 @@ new class extends Component {
   </div>
 
   <flux:pagination :paginator="$this->users" />
-</flux:main>
+</div>
