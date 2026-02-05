@@ -11,4 +11,5 @@ Route::livewire('/verify', "pages::verification")->name("verification");
 
 Route::middleware("auth")->group(function () {
   Route::livewire('/members', "pages::members")->name("members");
+  Route::livewire('/settings', "pages::settings")->name("settings");
 });

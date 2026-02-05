@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -68,7 +69,6 @@ class User extends Authenticatable
       return $activeToken;
     }
 
-
     DB::table('password_reset_tokens')
       ->where('email', $this->email)
       ->orWhere('created_at', '>', now()->subMinutes(15))
@@ -87,5 +87,14 @@ class User extends Authenticatable
     Mail::to($this->email)->send($mail);
 
     return $generatedCode;
+  }
+
+  public function picture()
+  {
+    if (!$this->profile_picture) {
+      return null;
+    }
+
+    return Storage::url($this->profile_picture);
   }
 }

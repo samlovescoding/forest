@@ -1,5 +1,8 @@
 {
-    "agents": ["opencode", "cursor"],
+    "agents": [
+        "opencode",
+        "cursor"
+    ],
     "guidelines": true,
     "herd_mcp": false,
     "mcp": true,
