@@ -124,7 +124,8 @@ new class extends Component
 ?>
 
 <div>
-  <flux:heading size="xl">Settings</flux:heading>
+  <title>Settings</title>
+  <flux:heading size="xl">Customize Your Profile</flux:heading>
   <flux:separator variant="subtle" class="my-8" />
   <x-form class="flex flex-col lg:flex-row gap-4 lg:gap-6" wire:submit="save">
     <div class="w-80">

@@ -33,6 +33,7 @@ new class extends Component {
 
 
 <div>
+  <title>Members</title>
   <flux:heading size="xl" level="1">Members</flux:heading>
   <flux:text class="mt-2 mb-6 text-base">Here's all your members</flux:text>
   <flux:separator variant="subtle" />
