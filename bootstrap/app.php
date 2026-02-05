@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
   )
   ->withMiddleware(function (Middleware $middleware): void {
     $middleware->alias(['layout' => WithLayout::class]);
+    $middleware->trustProxies('*');
   })
   ->withExceptions(function (Exceptions $exceptions): void {
     //
