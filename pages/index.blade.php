@@ -12,9 +12,7 @@ new class extends Component
   <title>Welcome</title>
   <h1 class="text-4xl">Forest</h1>
   <flux:text>Best Server for Gooners</flux:text>
-  <flux:text>Better than Discord or Telegram</flux:text>
-
-  <flux:text>Version {{ config('app.version') }}</flux:text>
+  <flux:text>Better than Discord or Telegram. Yes Really</flux:text>
 
   <flux:spacer class="h-16" />
 
