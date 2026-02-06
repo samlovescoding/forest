@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\WithLayout;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -12,7 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
     health: '/up',
   )
   ->withMiddleware(function (Middleware $middleware): void {
-    $middleware->alias(['layout' => WithLayout::class]);
+    $middleware->alias([
+      'layout' => WithLayout::class,
+      'verified' => EnsureEmailIsVerified::class,
+    ]);
+
     $middleware->trustProxies('*');
   })
   ->withExceptions(function (Exceptions $exceptions): void {

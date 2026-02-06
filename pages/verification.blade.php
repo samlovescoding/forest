@@ -54,6 +54,8 @@ new #[Layout("layouts::authentication")] class extends Component {
 
     $this->user->email_verified_at = now();
 
+    Session::remove('verification_required_for_user');
+
     $this->user->save();
 
     Auth::login($this->user);

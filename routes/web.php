@@ -12,7 +12,7 @@ Route::middleware('layout:auth')->group(function () {
 });
 
 
-Route::middleware("auth")->middleware('layout:dashboard')->group(function () {
+Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   Route::livewire('/home', "pages::home")->name("home");
   Route::livewire('/members', "pages::members")->name("members");
   Route::livewire('/settings', "pages::settings")->name("settings");
