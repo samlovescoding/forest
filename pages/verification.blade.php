@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 
 new #[Layout("layouts::authentication")] class extends Component {
@@ -21,7 +20,7 @@ new #[Layout("layouts::authentication")] class extends Component {
     $registeredUserId = Session::get('verification_required_for_user');
     $this->user = User::find($registeredUserId);
     if (!$this->user) {
-      dd($this->user);
+      return $this->redirectRoute('login');
     }
   }
 

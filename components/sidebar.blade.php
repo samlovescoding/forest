@@ -33,7 +33,9 @@ new class extends Component {
         <x-sidebar-item href="#">Item 1</x-sidebar-item>
         <x-sidebar-item href="#">Item 2</x-sidebar-item>
       </flux:sidebar.group>
-      <x-sidebar-item href="{{ route('members') }}" icon="user-group">Members</x-sidebar-item>
+      <x-sidebar-item href="{{ route('people.index') }}" icon="user-group">
+        People
+      </x-sidebar-item>
     </flux:sidebar.nav>
     <flux:sidebar.spacer />
     <flux:dropdown position="top" align="start" class="max-lg:hidden">
