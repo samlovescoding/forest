@@ -10,8 +10,6 @@ new class extends Component {
 
   public PersonForm $form;
 
-  public $picture;
-
   public function submit()
   {
     $fields = $this->form->all();

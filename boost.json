@@ -1,7 +1,6 @@
 {
     "agents": [
-        "opencode",
-        "cursor"
+        "opencode"
     ],
     "guidelines": true,
     "herd_mcp": false,
