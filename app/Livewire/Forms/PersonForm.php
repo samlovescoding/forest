@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Forms;
 
-use App\Livewire\Forms\Concerns\Image\ImageTranscoder;
 use App\Livewire\Forms\Concerns\Image\WithImageResizing;
 use App\Models\Person;
 use Livewire\Attributes\Validate;
@@ -11,154 +10,115 @@ use Livewire\Form;
 
 class PersonForm extends Form
 {
-  use WithImageResizing;
+    use WithImageResizing;
 
-  public ?Person $person = null;
+    public ?Person $person = null;
 
-  #[Validate('required|min:2')]
-  public string $name = '';
+    #[Validate('required|min:2')]
+    public string $name = '';
 
-  #[Validate('nullable|string')]
-  public string $slug = '';
+    #[Validate('nullable|string')]
+    public string $slug = '';
 
-  #[Validate('nullable|string')]
-  public string $full_name = '';
+    #[Validate('nullable|string')]
+    public string $full_name = '';
 
-  #[Validate('required|date')]
-  public string $birth_date = '';
+    #[Validate('required|date')]
+    public string $birth_date = '';
 
-  #[Validate('nullable|date')]
-  public string $death_date = '';
+    #[Validate('nullable|date')]
+    public string $death_date = '';
 
-  #[Validate('required')]
-  public string $gender = 'female';
+    #[Validate('required')]
+    public string $gender = 'female';
 
-  #[Validate('required')]
-  public string $sexuality = 'straight';
+    #[Validate('required')]
+    public string $sexuality = 'straight';
 
-  #[Validate('required')]
-  public string $birth_country = 'United States of America';
+    #[Validate('required')]
+    public string $birth_country = 'United States of America';
 
-  #[Validate('nullable|string')]
-  public string $birth_city = '';
+    #[Validate('nullable|string')]
+    public string $birth_city = '';
 
-  #[Validate('nullable|image|max:10240')]
-  public $picture;
+    #[Validate('nullable|image|max:10240')]
+    public $picture;
 
-  public function prefill(): void
-  {
-    $faker = fake();
-    $displayName = $faker->firstName().' '.$faker->lastName();
-    $birthDate = $faker->dateTimeBetween('-95 years', '-18 years');
+    public function prefill(): void
+    {
+        $faker = fake();
+        $displayName = $faker->firstName().' '.$faker->lastName();
+        $birthDate = $faker->dateTimeBetween('-95 years', '-18 years');
 
-    $this->name = $displayName;
-    $this->full_name = $faker->name();
-    $this->slug = str($displayName)->slug();
-    $this->birth_date = $birthDate->format('Y-m-d');
-    $this->death_date = $faker->boolean(20)
-      ? $faker->dateTimeBetween($birthDate, 'now')->format('Y-m-d')
-      : '';
-    $this->gender = $faker->randomElement(['female', 'male', 'unknown']);
-    $this->sexuality = $faker->randomElement([
-        'straight',
-        'lesbian',
-        'gay',
-        'trans-male',
-        'trans-female',
-        'bisexual-male',
-        'bisexual-female',
-    ]);
-    $this->birth_country = $faker->country();
-    $this->birth_city = $faker->city();
-  }
-
-  public function all(): array
-  {
-    $fields = $this->validate();
-
-    return $fields;
-  }
-
-  public function store(): Person
-  {
-    $fields = $this->validate();
-    $fields['slug'] = Person::createSlug($fields['name']);
-
-    if ($this->picture instanceof TemporaryUploadedFile) {
-      $fields['picture'] = $this->transcodePicture($this->picture, $fields['slug']);
+        $this->name = $displayName;
+        $this->full_name = $faker->name();
+        $this->slug = str($displayName)->slug();
+        $this->birth_date = $birthDate->format('Y-m-d');
+        $this->death_date = $faker->boolean(20)
+            ? $faker->dateTimeBetween($birthDate, 'now')->format('Y-m-d')
+            : '';
+        $this->gender = $faker->randomElement(['female', 'male', 'unknown']);
+        $this->sexuality = $faker->randomElement([
+            'straight',
+            'lesbian',
+            'gay',
+            'trans-male',
+            'trans-female',
+            'bisexual-male',
+            'bisexual-female',
+        ]);
+        $this->birth_country = $faker->country();
+        $this->birth_city = $faker->city();
     }
 
-    return Person::query()->create($fields);
-  }
+    public function all(): array
+    {
+        $fields = $this->validate();
 
-  private function transcodePicture(TemporaryUploadedFile $picture, string $slug): string
-  {
-    return $this->buildPictureTranscoder($picture, $slug)
-        ->store()
-        ->primaryPath();
-  }
-
-  private function buildPictureTranscoder(TemporaryUploadedFile $picture, string $slug): ImageTranscoder
-  {
-    $transcoder = $this->transcodeUploadedImage($picture)
-        ->disk('public')
-        ->directory('people')
-        ->basename($slug)
-        ->coverDown(512, 512, 'center');
-
-    if ($this->isGifUpload($picture)) {
-      return $transcoder
-          ->variant('gif', fn ($image) => $image->toGif())
-          ->variant('jpg', fn ($image) => $image->removeAnimation(0)->toJpeg(92))
-          ->variant('webp', fn ($image) => $image->removeAnimation(0)->toWebp(80))
-          ->variant('avif', fn ($image) => $image->removeAnimation(0)->toAvif(70))
-          ->primary('gif');
+        return $fields;
     }
 
-    return $transcoder
-        ->variant('jpg', fn ($image) => $image->toJpeg(92))
-        ->variant('webp', fn ($image) => $image->toWebp(80))
-        ->variant('avif', fn ($image) => $image->toAvif(70))
-        ->primary('jpg');
-  }
+    public function store(): Person
+    {
+        $fields = $this->validate();
+        $fields['slug'] = Person::createSlug($fields['name']);
 
-  private function isGifUpload(TemporaryUploadedFile $picture): bool
-  {
-    $mimeType = strtolower((string) $picture->getMimeType());
-    $extension = strtolower((string) $picture->getClientOriginalExtension());
+        if ($this->picture instanceof TemporaryUploadedFile) {
+            $fields['picture'] = $this->storeStandardPicture($this->picture, $fields['slug']);
+        }
 
-    return $mimeType === 'image/gif' || $extension === 'gif';
-  }
-
-  public function setPerson(Person $person): void
-  {
-    $this->person = $person;
-    $this->name = $person->name;
-    $this->slug = $person->slug;
-    $this->full_name = $person->full_name;
-    $this->birth_date = $person->birth_date->format('Y-m-d');
-    $this->death_date = $person->death_date?->format('Y-m-d') ?? '';
-    $this->gender = $person->gender;
-    $this->sexuality = $person->sexuality;
-    $this->birth_country = $person->birth_country;
-    $this->birth_city = $person->birth_city;
-    $this->picture = null;
-  }
-
-  public function update(): Person
-  {
-    $fields = $this->validate();
-
-    unset($fields['slug']);
-
-    if ($this->picture instanceof TemporaryUploadedFile) {
-      $fields['picture'] = $this->transcodePicture($this->picture, $this->person->slug);
-    } else {
-      unset($fields['picture']);
+        return Person::query()->create($fields);
     }
 
-    $this->person->update($fields);
+    public function setPerson(Person $person): void
+    {
+        $this->person = $person;
+        $this->name = $person->name;
+        $this->slug = $person->slug;
+        $this->full_name = $person->full_name;
+        $this->birth_date = $person->birth_date->format('Y-m-d');
+        $this->death_date = $person->death_date?->format('Y-m-d') ?? '';
+        $this->gender = $person->gender;
+        $this->sexuality = $person->sexuality;
+        $this->birth_country = $person->birth_country;
+        $this->birth_city = $person->birth_city;
+        $this->picture = null;
+    }
 
-    return $this->person->fresh();
-  }
+    public function update(): Person
+    {
+        $fields = $this->validate();
+
+        unset($fields['slug']);
+
+        if ($this->picture instanceof TemporaryUploadedFile) {
+            $fields['picture'] = $this->storeStandardPicture($this->picture, $this->person->slug);
+        } else {
+            unset($fields['picture']);
+        }
+
+        $this->person->update($fields);
+
+        return $this->person->fresh();
+    }
 }

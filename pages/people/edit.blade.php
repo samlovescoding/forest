@@ -124,7 +124,11 @@ new class extends Component
           New
         </div>
         @elseif($this->person->pictureUrl())
-        <img src="{{ $this->person->pictureUrl() }}" class="size-full object-cover" />
+        <x-picture
+          :src="$this->person->pictureUrl()"
+          :alt="$this->person->name"
+          picture-class="block size-full"
+          img-class="size-full object-cover" />
         @else
         <flux:icon name="user" variant="solid" class="text-zinc-500 dark:text-zinc-400" />
         @endif

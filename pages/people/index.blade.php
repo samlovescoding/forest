@@ -43,14 +43,15 @@ new class extends Component
     @foreach($this->people as $person)
     @php($pictureUrl = $person->pictureUrl())
 
-    <flux:card size="sm" class="flex h-full flex-col gap-4">
-      <div class="aspect-square w-full overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-white/10 dark:bg-white/10">
+    <flux:card size="sm" class="flex h-full flex-col gap-4 p-0 overflow-hidden">
+      <div class="aspect-square w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
         @if($pictureUrl)
-        <img
-          src="{{ $pictureUrl }}"
-          alt="{{ $person->name }}"
-          class="size-full object-cover"
-          onerror="this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');" />
+        <x-picture
+          :src="$pictureUrl"
+          :alt="$person->name"
+          picture-class="block size-full"
+          img-class="size-full object-cover"
+          onerror="this.classList.add('hidden'); this.closest('picture').nextElementSibling.classList.remove('hidden');" />
 
         <div class="hidden size-full items-center justify-center">
           <flux:icon name="user" variant="solid" class="size-10 text-zinc-500 dark:text-zinc-400" />
@@ -62,17 +63,14 @@ new class extends Component
         @endif
       </div>
 
-      <div class="flex items-start justify-between gap-3">
+      <div class="flex items-center justify-between gap-3 p-4 pt-0">
         <div class="min-w-0">
           <flux:heading size="sm" class="truncate">{{ $person->name }}</flux:heading>
         </div>
 
-        <flux:badge size="sm">{{ str($person->gender)->headline() }}</flux:badge>
-      </div>
-
-      <div class="mt-auto flex items-center gap-2">
-        <flux:button size="xs" variant="ghost" href="{{ route('people.view', $person) }}" wire:navigate>View</flux:button>
-        <flux:button size="xs" variant="primary" href="{{ route('people.edit', $person) }}" wire:navigate>Edit</flux:button>
+        <div class="flex shrink-0 items-center gap-2">
+          <flux:button size="xs" href="{{ route('people.view', $person) }}" wire:navigate>View</flux:button>
+        </div>
       </div>
     </flux:card>
     @endforeach
