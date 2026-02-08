@@ -3,17 +3,16 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
+use Livewire\Component;
 
-new #[Layout("layouts::authentication")] class extends Component {
-
-  #[Validate("email")]
+new #[Layout('layouts::authentication')] class extends Component
+{
+  #[Validate('email')]
   public string $email;
 
-  #[Validate("min:8")]
+  #[Validate('min:8')]
   public string $password;
 
   public function mount()
@@ -24,8 +23,8 @@ new #[Layout("layouts::authentication")] class extends Component {
   public function prefill()
   {
     if (app()->environment('local')) {
-      $this->email = "admin@forest.test";
-      $this->password = "helloworld";
+      $this->email = 'admin@forest.test';
+      $this->password = 'helloworld';
     }
   }
 
@@ -33,27 +32,28 @@ new #[Layout("layouts::authentication")] class extends Component {
   {
     $fields = $this->validate();
 
-    $user = User::where("email", $fields["email"])->first();
+    $user = User::where('email', $fields['email'])->first();
 
-    if (!$user) {
-      return $this->addError("email", "Email isn't associated with any account.");
+    if (! $user) {
+      return $this->addError('email', "Email isn't associated with any account.");
     }
 
-    $isPasswordCorrect = password_verify($fields["password"], $user->password);
+    $isPasswordCorrect = password_verify($fields['password'], $user->password);
 
     if (! $isPasswordCorrect) {
-      return $this->addError("password", "Your password is incorrect.");
+      return $this->addError('password', 'Your password is incorrect.');
     }
 
     if ($user->email_verified_at === null) {
-      Session::put("verification_required_for_user", $user->id);
+      Session::put('verification_required_for_user', $user->id);
       $user->sendEmailVerification();
-      return $this->redirectRoute("verification");
+
+      return $this->redirectRoute('verification');
     }
 
     Auth::login($user);
 
-    return $this->redirectRoute("home");
+    return $this->redirectRoute('home');
   }
 };
 ?>
