@@ -30,6 +30,10 @@ new class extends Component {
 ?>
 
 <div>
+  <title>Person Enrollment</title>
+  <flux:heading size="xl" level="1">Enroll a new Person</flux:heading>
+  <flux:separator variant="subtle" class="mt-4 mb-8" />
+
   <x-form class="flex flex-col gap-4" wire:submit.prevent="submit">
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
