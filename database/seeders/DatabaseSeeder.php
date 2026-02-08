@@ -16,8 +16,11 @@ class DatabaseSeeder extends Seeder
     }
   }
 
-  public function local()
+  public function local(): void
   {
-    $this->call(PersonSeeder::class);
+    $this->call([
+      PersonSeeder::class,
+      AdministratorSeeder::class,
+    ]);
   }
 }
