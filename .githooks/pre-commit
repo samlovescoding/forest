@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+if [ ! -x "vendor/bin/pint" ]; then
+    echo "pre-commit: vendor/bin/pint not found. Run composer install."
+    exit 1
+fi
+
+staged_php_files=()
+while IFS= read -r -d '' file; do
+    staged_php_files+=("$file")
+done < <(git diff --cached --name-only --diff-filter=ACMR -z -- '*.php')
+
+if [ "${#staged_php_files[@]}" -gt 0 ]; then
+    echo "pre-commit: running Pint on staged PHP files..."
+    vendor/bin/pint --format agent "${staged_php_files[@]}"
+    git add -- "${staged_php_files[@]}"
+else
+    echo "pre-commit: no staged PHP files detected."
+fi
+
+echo "pre-commit: running full test suite..."
+php artisan test --compact

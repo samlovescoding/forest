@@ -50,7 +50,11 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "npm install",
-            "npm run build"
+            "npm run build",
+            "@hooks:install"
+        ],
+        "hooks:install": [
+            "@php -r \"if (is_dir('.git')) { passthru('git config core.hooksPath .githooks'); }\""
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
@@ -64,9 +68,13 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "post-install-cmd": [
+            "@hooks:install"
+        ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan boost:update --ansi"
+            "@php artisan boost:update --ansi",
+            "@hooks:install"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
