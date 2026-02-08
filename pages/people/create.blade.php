@@ -10,6 +10,20 @@ new class extends Component {
 
   public PersonForm $form;
 
+  public function mount()
+  {
+    $this->prefill();
+  }
+
+  public function prefill()
+  {
+    if (! app()->environment('local')) {
+      return;
+    }
+
+    $this->form->prefill();
+  }
+
   public function submit()
   {
     $fields = $this->form->store();
