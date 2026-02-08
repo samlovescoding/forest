@@ -13,11 +13,11 @@ use Tests\TestCase;
 
 uses(TestCase::class);
 
-it('stores non-gif uploads with the standard picture profile', function (): void {
+it('stores non-gif uploads with the person picture profile', function (): void {
     Storage::fake('public');
 
     $file = toTemporaryUploadedFile(UploadedFile::fake()->image('portrait.jpg', 2000, 1000));
-    $path = imageResizingHarness()->storeStandard($file, 'test-person');
+    $path = imageResizingHarness()->storePerson($file, 'test-person');
 
     expect($path)->toBe('people/test-person.jpg');
 
@@ -38,7 +38,7 @@ it('stores gif uploads as animated gif primary with flattened alternate variants
     Storage::fake('public');
 
     $file = toTemporaryUploadedFile(traitAnimatedGifUpload(320, 240));
-    $path = imageResizingHarness()->storeStandard($file, 'animated-person');
+    $path = imageResizingHarness()->storePerson($file, 'animated-person');
 
     expect($path)->toBe('people/animated-person.gif');
 
@@ -94,13 +94,13 @@ function imageResizingHarness(): object
     {
         use WithImageResizing;
 
-        public function storeStandard(
+        public function storePerson(
             TemporaryUploadedFile $file,
             string $basename,
             string $directory = 'people',
             string $disk = 'public',
         ): string {
-            return $this->storeStandardPicture($file, $basename, $directory, $disk);
+            return $this->storePersonPicture($file, $basename, $directory, $disk);
         }
 
         public function storeCustom(

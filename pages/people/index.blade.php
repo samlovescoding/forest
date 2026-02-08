@@ -14,7 +14,7 @@ new class extends Component
   public function people(): LengthAwarePaginator
   {
     return Person::query()
-        ->latest('id')
+        ->orderBy('name', 'asc')
         ->paginate(12);
   }
 };
@@ -29,7 +29,7 @@ new class extends Component
       <flux:text class="mt-2 text-base">Browse all enrolled people.</flux:text>
     </div>
 
-    <flux:button size="sm" href="{{ route('people.create') }}" wire:navigate>Enroll</flux:button>
+    <flux:button size="sm" href="{{ route('people.create') }}" wire:navigate>Add a Person</flux:button>
   </div>
 
   <flux:separator variant="subtle" class="my-6" />

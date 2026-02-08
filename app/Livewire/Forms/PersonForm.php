@@ -84,7 +84,7 @@ class PersonForm extends Form
         $fields['slug'] = Person::createSlug($fields['name']);
 
         if ($this->picture instanceof TemporaryUploadedFile) {
-            $fields['picture'] = $this->storeStandardPicture($this->picture, $fields['slug']);
+            $fields['picture'] = $this->storePersonPicture($this->picture, $fields['slug']);
         }
 
         return Person::query()->create($fields);
@@ -112,7 +112,7 @@ class PersonForm extends Form
         unset($fields['slug']);
 
         if ($this->picture instanceof TemporaryUploadedFile) {
-            $fields['picture'] = $this->storeStandardPicture($this->picture, $this->person->slug);
+            $fields['picture'] = $this->storePersonPicture($this->picture, $this->person->slug);
         } else {
             unset($fields['picture']);
         }
