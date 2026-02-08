@@ -2,7 +2,6 @@
 
 use App\Models\Person;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,19 +16,6 @@ new class extends Component
     return Person::query()
         ->latest('id')
         ->paginate(12);
-  }
-
-  public function pictureUrl(Person $person): ?string
-  {
-    if ($person->picture === null || $person->picture === '') {
-      return null;
-    }
-
-    if (str($person->picture)->startsWith(['http://', 'https://', '/'])) {
-      return $person->picture;
-    }
-
-    return Storage::url($person->picture);
   }
 };
 ?>
@@ -55,7 +41,7 @@ new class extends Component
   @else
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
     @foreach($this->people as $person)
-    @php($pictureUrl = $this->pictureUrl($person))
+    @php($pictureUrl = $person->pictureUrl())
 
     <flux:card size="sm" class="flex h-full flex-col gap-4">
       <div class="aspect-square w-full overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-white/10 dark:bg-white/10">

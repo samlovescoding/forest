@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Person extends Model
 {
@@ -23,11 +24,37 @@ class Person extends Model
       'picture',
   ];
 
-  public function casts()
+  public function casts(): array
   {
     return [
         'birth_date' => 'date',
         'death_date' => 'date',
     ];
+  }
+
+  public function pictureUrl(?string $extension = null): ?string
+  {
+    if (! $this->picture) {
+      return null;
+    }
+
+    if ($extension === null || trim($extension) === '') {
+      return Storage::url($this->picture);
+    }
+
+    $normalizedExtension = strtolower(ltrim(trim($extension), '.'));
+
+    if (! in_array($normalizedExtension, ['gif', 'jpg', 'webp', 'avif'], true)) {
+      return Storage::url($this->picture);
+    }
+
+    $directory = pathinfo($this->picture, PATHINFO_DIRNAME);
+    $filename = pathinfo($this->picture, PATHINFO_FILENAME);
+
+    $path = $directory === '.'
+      ? "{$filename}.{$normalizedExtension}"
+      : "{$directory}/{$filename}.{$normalizedExtension}";
+
+    return Storage::url($path);
   }
 }

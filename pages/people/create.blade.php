@@ -10,12 +10,12 @@ new class extends Component
 
   public PersonForm $form;
 
-  public function mount()
+  public function mount(): void
   {
     $this->prefill();
   }
 
-  public function prefill()
+  public function prefill(): void
   {
     if (! app()->environment('local')) {
       return;
@@ -24,14 +24,14 @@ new class extends Component
     $this->form->prefill();
   }
 
-  public function submit()
+  public function submit(): void
   {
-    $fields = $this->form->store();
+    $person = $this->form->store();
 
-    dd($fields);
+    $this->redirect(route('people.view', $person));
   }
 
-  public function updated($field)
+  public function updated(string $field): void
   {
     if ($field === 'form.name') {
       if ($this->form->full_name === '') {

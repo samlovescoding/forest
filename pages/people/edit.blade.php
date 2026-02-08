@@ -2,7 +2,6 @@
 
 use App\Livewire\Forms\PersonForm;
 use App\Models\Person;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -35,19 +34,6 @@ new class extends Component
         $this->form->slug = str($this->form->name)->slug();
       }
     }
-  }
-
-  public function getPictureUrlProperty(): ?string
-  {
-    if ($this->person->picture === null || $this->person->picture === '') {
-      return null;
-    }
-
-    if (str($this->person->picture)->startsWith(['http://', 'https://', '/'])) {
-      return $this->person->picture;
-    }
-
-    return Storage::url($this->person->picture);
   }
 };
 ?>
@@ -137,8 +123,8 @@ new class extends Component
         <div class="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
           New
         </div>
-        @elseif($this->pictureUrl)
-        <img src="{{ $this->pictureUrl }}" class="size-full object-cover" />
+        @elseif($this->person->pictureUrl())
+        <img src="{{ $this->person->pictureUrl() }}" class="size-full object-cover" />
         @else
         <flux:icon name="user" variant="solid" class="text-zinc-500 dark:text-zinc-400" />
         @endif

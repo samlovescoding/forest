@@ -2,12 +2,17 @@
 
 namespace App\Livewire\Forms;
 
+use App\Livewire\Forms\Concerns\Image\ImageTranscoder;
+use App\Livewire\Forms\Concerns\Image\WithImageResizing;
 use App\Models\Person;
 use Livewire\Attributes\Validate;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\Form;
 
 class PersonForm extends Form
 {
+  use WithImageResizing;
+
   public ?Person $person = null;
 
   #[Validate('required|min:2')]
@@ -40,7 +45,7 @@ class PersonForm extends Form
   #[Validate('nullable|image|max:10240')]
   public $picture;
 
-  public function prefill()
+  public function prefill(): void
   {
     $faker = fake();
     $displayName = $faker->firstName().' '.$faker->lastName();
@@ -67,20 +72,62 @@ class PersonForm extends Form
     $this->birth_city = $faker->city();
   }
 
-  public function all()
+  public function all(): array
   {
     $fields = $this->validate();
 
     return $fields;
   }
 
-  public function store()
+  public function store(): Person
   {
     $fields = $this->validate();
     $fields['slug'] = Person::createSlug($fields['name']);
-    dd($fields);
 
-    return $fields;
+    if ($this->picture instanceof TemporaryUploadedFile) {
+      $fields['picture'] = $this->transcodePicture($this->picture, $fields['slug']);
+    }
+
+    return Person::query()->create($fields);
+  }
+
+  private function transcodePicture(TemporaryUploadedFile $picture, string $slug): string
+  {
+    return $this->buildPictureTranscoder($picture, $slug)
+        ->store()
+        ->primaryPath();
+  }
+
+  private function buildPictureTranscoder(TemporaryUploadedFile $picture, string $slug): ImageTranscoder
+  {
+    $transcoder = $this->transcodeUploadedImage($picture)
+        ->disk('public')
+        ->directory('people')
+        ->basename($slug)
+        ->coverDown(512, 512, 'center');
+
+    if ($this->isGifUpload($picture)) {
+      return $transcoder
+          ->variant('gif', fn ($image) => $image->toGif())
+          ->variant('jpg', fn ($image) => $image->removeAnimation(0)->toJpeg(92))
+          ->variant('webp', fn ($image) => $image->removeAnimation(0)->toWebp(80))
+          ->variant('avif', fn ($image) => $image->removeAnimation(0)->toAvif(70))
+          ->primary('gif');
+    }
+
+    return $transcoder
+        ->variant('jpg', fn ($image) => $image->toJpeg(92))
+        ->variant('webp', fn ($image) => $image->toWebp(80))
+        ->variant('avif', fn ($image) => $image->toAvif(70))
+        ->primary('jpg');
+  }
+
+  private function isGifUpload(TemporaryUploadedFile $picture): bool
+  {
+    $mimeType = strtolower((string) $picture->getMimeType());
+    $extension = strtolower((string) $picture->getClientOriginalExtension());
+
+    return $mimeType === 'image/gif' || $extension === 'gif';
   }
 
   public function setPerson(Person $person): void
@@ -102,11 +149,12 @@ class PersonForm extends Form
   {
     $fields = $this->validate();
 
-    // Slug is only created and cannot be updated.
     unset($fields['slug']);
 
-    if ($this->picture) {
-      $fields['picture'] = $this->picture->store('people', 'public');
+    if ($this->picture instanceof TemporaryUploadedFile) {
+      $fields['picture'] = $this->transcodePicture($this->picture, $this->person->slug);
+    } else {
+      unset($fields['picture']);
     }
 
     $this->person->update($fields);
