@@ -17,7 +17,7 @@ new class extends Component
       <flux:heading size="xl">People</flux:heading>
     </div>
     <div>
-      <flux:button size="sm" href="{{ route('people.create') }}" wire:navigate>Add New</flux:button>
+      <flux:button size="sm" href="{{ route('people.create') }}" wire:navigate>Enroll</flux:button>
     </div>
   </div>
   <flux:separator variant="subtle" class="my-6" />

@@ -31,3 +31,8 @@
         cursor: pointer;
     }
 }
+
+body,
+html {
+    overscroll-behavior: none;
+}
