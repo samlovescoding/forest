@@ -18,17 +18,17 @@ class EnsureEmailIsVerified
   public function handle(Request $request, Closure $next): Response
   {
 
-    if (!Auth::check()) {
+    if (! Auth::check()) {
       return redirect()->route('login');
     }
 
     // Check if email_verified_at is not null
     $user = Auth::user();
     if (is_null($user->email_verified_at)) {
-      Session::put("verification_required_for_user", $user->id);
+      Session::put('verification_required_for_user', $user->id);
+
       return redirect()->route('verification');
     }
-
 
     return $next($request);
   }

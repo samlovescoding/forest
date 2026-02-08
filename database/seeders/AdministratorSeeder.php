@@ -12,9 +12,9 @@ class AdministratorSeeder extends Seeder
     User::query()->updateOrCreate(
       ['email' => 'admin@forest.test'],
       [
-        'name' => 'Administrator',
-        'password' => 'helloworld',
-        'email_verified_at' => now(),
+          'name' => 'Administrator',
+          'password' => 'helloworld',
+          'email_verified_at' => now(),
       ],
     );
   }

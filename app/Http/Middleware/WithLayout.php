@@ -17,6 +17,7 @@ class WithLayout
   public function handle(Request $request, Closure $next, string $component): Response
   {
     Config::set('livewire.component_layout', $component);
+
     return $next($request);
   }
 }

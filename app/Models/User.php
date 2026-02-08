@@ -21,10 +21,10 @@ class User extends Authenticatable
    * @var list<string>
    */
   protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'email_verified_at'
+      'name',
+      'email',
+      'password',
+      'email_verified_at',
   ];
 
   /**
@@ -33,8 +33,8 @@ class User extends Authenticatable
    * @var list<string>
    */
   protected $hidden = [
-    'password',
-    'remember_token',
+      'password',
+      'remember_token',
   ];
 
   /**
@@ -45,17 +45,17 @@ class User extends Authenticatable
   protected function casts(): array
   {
     return [
-      'email_verified_at' => 'datetime',
-      'password' => 'hashed',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
   }
 
   public function hasAlreadySentAVerificationEmail()
   {
     $emailInPreviousMinute = DB::table('password_reset_tokens')
-      ->where('email', $this->email)
-      ->where('created_at', '>', now()->subMinutes(2))
-      ->first();
+        ->where('email', $this->email)
+        ->where('created_at', '>', now()->subMinutes(2))
+        ->first();
 
     if ($emailInPreviousMinute) {
       return $emailInPreviousMinute->token;
@@ -71,16 +71,16 @@ class User extends Authenticatable
     }
 
     DB::table('password_reset_tokens')
-      ->where('email', $this->email)
-      ->orWhere('created_at', '>', now()->subMinutes(15))
-      ->delete();
+        ->where('email', $this->email)
+        ->orWhere('created_at', '>', now()->subMinutes(15))
+        ->delete();
 
     $generatedCode = rand(100000, 999999);
 
     DB::table('password_reset_tokens')->insert([
-      'email' => $this->email,
-      'token' => $generatedCode,
-      'created_at' => now(),
+        'email' => $this->email,
+        'token' => $generatedCode,
+        'created_at' => now(),
     ]);
 
     $mail = new EmailVerification($generatedCode);
@@ -92,7 +92,7 @@ class User extends Authenticatable
 
   public function picture()
   {
-    if (!$this->profile_picture) {
+    if (! $this->profile_picture) {
       return null;
     }
 
