@@ -16,6 +16,19 @@ new #[Layout("layouts::authentication")] class extends Component {
   #[Validate("min:8")]
   public string $password;
 
+  public function mount()
+  {
+    $this->prefill();
+  }
+
+  public function prefill()
+  {
+    if (app()->environment('local')) {
+      $this->email = "admin@forest.test";
+      $this->password = "helloworld";
+    }
+  }
+
   public function submit()
   {
     $fields = $this->validate();
