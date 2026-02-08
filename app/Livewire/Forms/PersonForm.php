@@ -8,6 +8,8 @@ use Livewire\Form;
 
 class PersonForm extends Form
 {
+  public ?Person $person = null;
+
   #[Validate('required|min:2')]
   public string $name = '';
 
@@ -35,7 +37,7 @@ class PersonForm extends Form
   #[Validate('nullable|string')]
   public string $birth_city = '';
 
-  #[Validate('required|image|max:10240')]
+  #[Validate('nullable|image|max:10240')]
   public $picture;
 
   public function prefill()
@@ -79,5 +81,36 @@ class PersonForm extends Form
     dd($fields);
 
     return $fields;
+  }
+
+  public function setPerson(Person $person): void
+  {
+    $this->person = $person;
+    $this->name = $person->name;
+    $this->slug = $person->slug;
+    $this->full_name = $person->full_name;
+    $this->birth_date = $person->birth_date->format('Y-m-d');
+    $this->death_date = $person->death_date?->format('Y-m-d') ?? '';
+    $this->gender = $person->gender;
+    $this->sexuality = $person->sexuality;
+    $this->birth_country = $person->birth_country;
+    $this->birth_city = $person->birth_city;
+    $this->picture = null;
+  }
+
+  public function update(): Person
+  {
+    $fields = $this->validate();
+
+    // Slug is only created and cannot be updated.
+    unset($fields['slug']);
+
+    if ($this->picture) {
+      $fields['picture'] = $this->picture->store('people', 'public');
+    }
+
+    $this->person->update($fields);
+
+    return $this->person->fresh();
   }
 }

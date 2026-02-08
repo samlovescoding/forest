@@ -4,8 +4,8 @@ use App\Livewire\Forms\PersonForm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-new class extends Component {
-
+new class extends Component
+{
   use WithFileUploads;
 
   public PersonForm $form;
@@ -33,8 +33,8 @@ new class extends Component {
 
   public function updated($field)
   {
-    if ($field === "form.name") {
-      if ($this->form->full_name === "") {
+    if ($field === 'form.name') {
+      if ($this->form->full_name === '') {
         $this->form->full_name = $this->form->name;
         $this->form->slug = str($this->form->name)->slug();
       }
@@ -74,7 +74,7 @@ new class extends Component {
 
       <flux:date-picker
         label="Date of Death"
-        selectable-header
+        selectable-header clearable
         wire:model="form.death_date" />
 
       <flux:radio.group wire:model="form.gender" label="Gender" variant="segmented">

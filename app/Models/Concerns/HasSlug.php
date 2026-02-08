@@ -69,4 +69,9 @@ trait HasSlug
     return static::query()
         ->when($ignoreId, fn (Builder $query) => $query->where('id', '!=', $ignoreId));
   }
+
+  public function getRouteKeyName(): string
+  {
+    return 'slug';
+  }
 }
