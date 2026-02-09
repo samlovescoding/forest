@@ -16,6 +16,7 @@
 @task('pull')
   echo "Pulling latest from {{ $branch }}..."
   cd {{ $appDir }}
+  git stash --include-untracked
   git pull origin {{ $branch }}
 @endtask
 
