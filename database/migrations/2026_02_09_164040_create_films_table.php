@@ -11,19 +11,24 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('people', function (Blueprint $table) {
+    Schema::create('films', function (Blueprint $table) {
       $table->id();
-      $table->string('name');
-      $table->string('slug')->unique();
-      $table->string('full_name');
-      $table->date('birth_date');
-      $table->date('death_date')->nullable();
-      $table->string('gender');
-      $table->string('sexuality');
-      $table->string('birth_country');
-      $table->string('birth_city');
-      $table->string('picture')->nullable();
 
+      $table->string('title');
+      $table->string('slug')->unique();
+      $table->string('overview');
+      $table->integer('runtime');
+      $table->date('release_date');
+
+      $table->integer('vote_count');
+      $table->double('vote_average');
+      $table->double('popularity');
+
+      $table->string('backdrop_path')->nullable();
+      $table->string('poster_path')->nullable();
+
+      $table->string('tmdb_id');
+      $table->string('imdb_id');
       $table->boolean('is_published')->default(false);
       $table->boolean('is_hidden')->default(false);
       $table->timestamps();
@@ -35,6 +40,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('people');
+    Schema::dropIfExists('films');
   }
 };

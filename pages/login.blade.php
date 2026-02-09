@@ -1,5 +1,6 @@
 <?php
 
+use App\Mocks\WithLoginMock;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -9,6 +10,8 @@ use Livewire\Component;
 
 new #[Layout('layouts::authentication')] class extends Component
 {
+  use WithLoginMock;
+
   #[Validate('email')]
   public string $email;
 
@@ -17,14 +20,8 @@ new #[Layout('layouts::authentication')] class extends Component
 
   public function mount()
   {
-    $this->prefill();
-  }
-
-  public function prefill()
-  {
     if (app()->environment('local')) {
-      $this->email = 'admin@forest.test';
-      $this->password = 'helloworld';
+      $this->prefill();
     }
   }
 
