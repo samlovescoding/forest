@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\ImportShowSeasonsAndEpisodes;
 use App\Models\Genre;
 use App\Models\Show;
 use App\Services\TMDbService;
@@ -78,6 +79,8 @@ new class extends Component
     ]);
 
     $show->genres()->sync($genreIds);
+
+    ImportShowSeasonsAndEpisodes::dispatch($show);
 
     $this->redirectRoute('shows.view', $show);
   }
