@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Show;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -34,6 +35,12 @@ new class extends Component
     $end = $this->show->last_air_date ? $this->show->last_air_date->format('Y') : 'Present';
 
     return "{$start} - {$end}";
+  }
+
+  #[Computed]
+  public function seasons(): Collection
+  {
+    return $this->show->seasons()->orderBy('season_number')->get();
   }
 };
 ?>
@@ -150,6 +157,43 @@ new class extends Component
         </div>
       </flux:card>
       @endif
+
+      <flux:card>
+        <div class="flex items-center justify-between mb-4">
+          <flux:heading size="sm">Seasons</flux:heading>
+          <div class="flex gap-2">
+            <flux:button size="sm" href="{{ route('seasons.create', $this->show) }}" wire:navigate>
+              Add Season
+            </flux:button>
+            <flux:button size="sm" variant="ghost" href="{{ route('seasons.index', $this->show) }}" wire:navigate>
+              View All
+            </flux:button>
+          </div>
+        </div>
+
+        @if($this->seasons->isEmpty())
+          <flux:text class="text-zinc-500">No seasons added yet.</flux:text>
+        @else
+          <div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+            @foreach($this->seasons as $season)
+              <a href="{{ route('seasons.view', [$this->show, $season]) }}" wire:navigate class="block h-full">
+                <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
+                  <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+                    <flux:badge size="sm" class="absolute top-2 right-2">S{{ str_pad($season->season_number, 2, '0', STR_PAD_LEFT) }}</flux:badge>
+                    <x-picture
+                      :src="$season->posterUrl(...)"
+                      :alt="$season->name"
+                      icon="tv"/>
+                  </div>
+                  <div class="min-w-0 p-4 pt-0">
+                    <flux:heading size="sm" class="truncate">{{ $season->name }}</flux:heading>
+                  </div>
+                </flux:card>
+              </a>
+            @endforeach
+          </div>
+        @endif
+      </flux:card>
     </div>
   </section>
 </div>

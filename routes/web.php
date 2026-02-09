@@ -35,6 +35,18 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   Route::livewire('/shows/{show}/edit', 'pages::shows.edit')->name('shows.edit');
   Route::livewire('/shows/{show}', 'pages::shows.view')->name('shows.view');
 
+  // Seasons
+  Route::livewire('/shows/{show}/seasons', 'pages::shows.seasons.index')->name('seasons.index');
+  Route::livewire('/shows/{show}/seasons/create', 'pages::shows.seasons.create')->name('seasons.create');
+  Route::livewire('/shows/{show}/seasons/{season}/edit', 'pages::shows.seasons.edit')->name('seasons.edit');
+  Route::livewire('/shows/{show}/seasons/{season}', 'pages::shows.seasons.view')->name('seasons.view');
+
+  // Episodes
+  Route::livewire('/shows/{show}/seasons/{season}/episodes', 'pages::shows.seasons.episodes.index')->name('episodes.index');
+  Route::livewire('/shows/{show}/seasons/{season}/episodes/create', 'pages::shows.seasons.episodes.create')->name('episodes.create');
+  Route::livewire('/shows/{show}/seasons/{season}/episodes/{episode}/edit', 'pages::shows.seasons.episodes.edit')->name('episodes.edit');
+  Route::livewire('/shows/{show}/seasons/{season}/episodes/{episode}', 'pages::shows.seasons.episodes.view')->name('episodes.view');
+
   // Route::livewire('/members', "pages::members")->name("members");
   Route::livewire('/settings', 'pages::settings')->name('settings');
 });
