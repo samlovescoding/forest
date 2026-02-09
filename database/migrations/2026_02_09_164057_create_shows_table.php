@@ -16,23 +16,23 @@ return new class extends Migration
 
       $table->string('name');
       $table->string('slug')->unique();
-      $table->string('overview');
-      $table->string('episode_run_time'); // comma separated list of integers
-      $table->integer('number_of_seasons');
-      $table->integer('number_of_episodes');
+      $table->text('overview')->nullable();
+      $table->integer('episode_run_time')->nullable();
+      $table->integer('number_of_seasons')->nullable();
+      $table->integer('number_of_episodes')->nullable();
 
-      $table->date('first_air_date');
-      $table->date('last_air_date');
+      $table->date('first_air_date')->nullable();
+      $table->date('last_air_date')->nullable();
 
-      $table->integer('vote_count');
-      $table->double('vote_average');
-      $table->double('popularity');
+      $table->integer('vote_count')->nullable();
+      $table->double('vote_average')->nullable();
+      $table->double('popularity')->nullable();
 
       $table->string('backdrop_path')->nullable();
       $table->string('poster_path')->nullable();
 
-      $table->string('tmdb_id');
-      $table->string('imdb_id');
+      $table->string('tmdb_id')->nullable();
+      $table->string('imdb_id')->nullable();
       $table->boolean('is_published')->default(false);
       $table->boolean('is_hidden')->default(false);
 

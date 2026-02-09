@@ -178,6 +178,8 @@ class PersonSeeder extends Seeder
         string $sexuality,
         string $birthCountry,
         string $birthCity,
+        bool $isPublished = true,
+        bool $isHidden = false,
         ?string $picture = null,
     ): array {
         return [
@@ -190,6 +192,8 @@ class PersonSeeder extends Seeder
             'sexuality' => $sexuality,
             'birth_country' => $birthCountry,
             'birth_city' => $birthCity,
+            'is_published' => $isPublished,
+            'is_hidden' => $isHidden,
             'picture' => $picture,
         ];
     }

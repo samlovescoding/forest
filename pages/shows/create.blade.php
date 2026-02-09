@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Forms\FilmForm;
+use App\Livewire\Forms\ShowForm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -8,7 +8,7 @@ new class extends Component
 {
   use WithFileUploads;
 
-  public FilmForm $form;
+  public ShowForm $form;
 
   public function mount(): void
   {
@@ -26,31 +26,31 @@ new class extends Component
 
   public function submit(): void
   {
-    $film = $this->form->store();
+    $show = $this->form->store();
 
-    $this->redirect(route('films.view', $film));
+    $this->redirect(route('shows.view', $show));
   }
 
   public function updated(string $field): void
   {
-    if ($field === 'form.title') {
-      $this->form->slug = str($this->form->title)->slug();
+    if ($field === 'form.name') {
+      $this->form->slug = str($this->form->name)->slug();
     }
   }
 };
 ?>
 
 <div>
-  <title>Create Film</title>
-  <flux:heading size="xl" level="1">Create a new Film</flux:heading>
+  <title>Create Show</title>
+  <flux:heading size="xl" level="1">Create a new Show</flux:heading>
   <flux:separator variant="subtle" class="mt-4 mb-8" />
 
   <x-form class="flex flex-col gap-4" wire:submit.prevent="submit">
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
       <flux:input
-        label="Title"
-        wire:model.live.blur="form.title" />
+        label="Name"
+        wire:model.live.blur="form.name" />
 
       <flux:input
         label="Slug"
@@ -64,15 +64,35 @@ new class extends Component
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
       <flux:input
-        label="Runtime (minutes)"
+        label="Episode Run Time (minutes)"
         type="number"
         min="0"
-        wire:model="form.runtime" />
+        wire:model="form.episode_run_time" />
+
+      <flux:input
+        label="Number of Seasons"
+        type="number"
+        min="0"
+        wire:model="form.number_of_seasons" />
+
+      <flux:input
+        label="Number of Episodes"
+        type="number"
+        min="0"
+        wire:model="form.number_of_episodes" />
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-4 *:w-full">
+      <flux:date-picker
+        label="First Air Date"
+        selectable-header
+        wire:model="form.first_air_date" />
 
       <flux:date-picker
-        label="Release Date"
+        label="Last Air Date"
         selectable-header
-        wire:model="form.release_date" />
+        clearable
+        wire:model="form.last_air_date" />
     </div>
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
@@ -97,7 +117,7 @@ new class extends Component
           @if($this->form->poster)
           <img src="{{ $this->form->poster->temporaryUrl() }}" class="size-full object-cover" />
           @else
-          <flux:icon name="film" variant="solid" class="text-zinc-500 dark:text-zinc-400" />
+          <flux:icon name="tv" variant="solid" class="text-zinc-500 dark:text-zinc-400" />
           @endif
         </div>
 
@@ -134,7 +154,7 @@ new class extends Component
     </div>
 
     <div class="mt">
-      <flux:button variant="primary" type="submit">Create Film</flux:button>
+      <flux:button variant="primary" type="submit">Create Show</flux:button>
     </div>
   </x-form>
 </div>

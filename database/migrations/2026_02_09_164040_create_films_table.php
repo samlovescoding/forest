@@ -16,19 +16,19 @@ return new class extends Migration
 
       $table->string('title');
       $table->string('slug')->unique();
-      $table->string('overview');
-      $table->integer('runtime');
-      $table->date('release_date');
+      $table->text('overview')->nullable();
+      $table->integer('runtime')->nullable();
+      $table->date('release_date')->nullable();
 
-      $table->integer('vote_count');
-      $table->double('vote_average');
-      $table->double('popularity');
+      $table->integer('vote_count')->nullable();
+      $table->double('vote_average')->nullable();
+      $table->double('popularity')->nullable();
 
       $table->string('backdrop_path')->nullable();
       $table->string('poster_path')->nullable();
 
-      $table->string('tmdb_id');
-      $table->string('imdb_id');
+      $table->string('tmdb_id')->nullable();
+      $table->string('imdb_id')->nullable();
       $table->boolean('is_published')->default(false);
       $table->boolean('is_hidden')->default(false);
       $table->timestamps();

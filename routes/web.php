@@ -20,6 +20,18 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   Route::livewire('/people/{person}/edit', 'pages::people.edit')->name('people.edit');
   Route::livewire('/people/{person}', 'pages::people.view')->name('people.view');
 
+  // Films
+  Route::livewire('/films', 'pages::films.index')->name('films.index');
+  Route::livewire('/films/create', 'pages::films.create')->name('films.create');
+  Route::livewire('/films/{film}/edit', 'pages::films.edit')->name('films.edit');
+  Route::livewire('/films/{film}', 'pages::films.view')->name('films.view');
+
+  // Shows
+  Route::livewire('/shows', 'pages::shows.index')->name('shows.index');
+  Route::livewire('/shows/create', 'pages::shows.create')->name('shows.create');
+  Route::livewire('/shows/{show}/edit', 'pages::shows.edit')->name('shows.edit');
+  Route::livewire('/shows/{show}', 'pages::shows.view')->name('shows.view');
+
   // Route::livewire('/members', "pages::members")->name("members");
   Route::livewire('/settings', 'pages::settings')->name('settings');
 });

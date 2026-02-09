@@ -28,8 +28,8 @@ new class extends Component
       <x-sidebar-item icon="home" href="{{ route('home') }}">Home</x-sidebar-item>
       <flux:sidebar.group expandable icon="star" heading="Database" class="grid">
         <x-sidebar-item href="{{ route('people.index') }}" matching="start">People</x-sidebar-item>
-        <x-sidebar-item href="#">Films</x-sidebar-item>
-        <x-sidebar-item href="#">TV Shows</x-sidebar-item>
+        <x-sidebar-item href="{{ route('films.index') }}">Films</x-sidebar-item>
+        <x-sidebar-item href="{{ route('shows.index') }}">TV Shows</x-sidebar-item>
       </flux:sidebar.group>
     </flux:sidebar.nav>
     <flux:sidebar.spacer />

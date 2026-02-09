@@ -1,7 +1,7 @@
 <?php
 
-use App\Livewire\Forms\FilmForm;
-use App\Models\Film;
+use App\Livewire\Forms\ShowForm;
+use App\Models\Show;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -9,50 +9,50 @@ new class extends Component
 {
   use WithFileUploads;
 
-  public FilmForm $form;
+  public ShowForm $form;
 
-  public Film $film;
+  public Show $show;
 
-  public function mount(Film $film): void
+  public function mount(Show $show): void
   {
-    $this->film = $film;
-    $this->form->setFilm($film);
+    $this->show = $show;
+    $this->form->setShow($show);
   }
 
   public function submit(): void
   {
     $this->form->update();
 
-    $this->redirect(route('films.view', $this->film));
+    $this->redirect(route('shows.view', $this->show));
   }
 
   public function publish(): void
   {
-    $this->film->update([
+    $this->show->update([
         'is_published' => true,
     ]);
   }
 
   public function toggleVisibility(): void
   {
-    $this->film->update([
-        'is_hidden' => ! $this->film->is_hidden,
+    $this->show->update([
+        'is_hidden' => ! $this->show->is_hidden,
     ]);
   }
 };
 ?>
 
 <div>
-  <title>Editing {{ $this->form->title }}</title>
-  <flux:heading size="xl" level="1">Editing "{{ $this->form->title }}"</flux:heading>
+  <title>Editing {{ $this->form->name }}</title>
+  <flux:heading size="xl" level="1">Editing "{{ $this->form->name }}"</flux:heading>
   <flux:separator variant="subtle" class="mt-4 mb-8"/>
 
   <x-form class="flex flex-col gap-4" wire:submit.prevent="submit">
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
       <flux:input
-        label="Title"
-        wire:model.live.blur="form.title"/>
+        label="Name"
+        wire:model.live.blur="form.name"/>
 
       <flux:input
         label="Slug"
@@ -66,15 +66,35 @@ new class extends Component
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
       <flux:input
-        label="Runtime (minutes)"
+        label="Episode Run Time (minutes)"
         type="number"
         min="0"
-        wire:model="form.runtime"/>
+        wire:model="form.episode_run_time"/>
+
+      <flux:input
+        label="Number of Seasons"
+        type="number"
+        min="0"
+        wire:model="form.number_of_seasons"/>
+
+      <flux:input
+        label="Number of Episodes"
+        type="number"
+        min="0"
+        wire:model="form.number_of_episodes"/>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-4 *:w-full">
+      <flux:date-picker
+        label="First Air Date"
+        selectable-header
+        wire:model="form.first_air_date"/>
 
       <flux:date-picker
-        label="Release Date"
+        label="Last Air Date"
         selectable-header
-        wire:model="form.release_date"/>
+        clearable
+        wire:model="form.last_air_date"/>
     </div>
 
     <div class="flex flex-col lg:flex-row gap-4 *:w-full">
@@ -101,12 +121,12 @@ new class extends Component
               class="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
               New
             </div>
-          @elseif($this->film->poster_path)
-            <img src="{{ Storage::disk('public')->url($this->film->poster_path) }}"
-                 alt="{{ $this->film->title }}"
+          @elseif($this->show->poster_path)
+            <img src="{{ Storage::disk('public')->url($this->show->poster_path) }}"
+                 alt="{{ $this->show->name }}"
                  class="size-full object-cover"/>
           @else
-            <flux:icon name="film" variant="solid" class="text-zinc-500 dark:text-zinc-400"/>
+            <flux:icon name="tv" variant="solid" class="text-zinc-500 dark:text-zinc-400"/>
           @endif
         </div>
 
@@ -130,9 +150,9 @@ new class extends Component
               class="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
               New
             </div>
-          @elseif($this->film->backdrop_path)
-            <img src="{{ Storage::disk('public')->url($this->film->backdrop_path) }}"
-                 alt="{{ $this->film->title }} backdrop"
+          @elseif($this->show->backdrop_path)
+            <img src="{{ Storage::disk('public')->url($this->show->backdrop_path) }}"
+                 alt="{{ $this->show->name }} backdrop"
                  class="size-full object-cover"/>
           @else
             <flux:icon name="photo" variant="solid" class="text-zinc-500 dark:text-zinc-400"/>
@@ -158,9 +178,9 @@ new class extends Component
 
       <flux:spacer/>
 
-      @unless($this->film->is_published)
+      @unless($this->show->is_published)
         <flux:button
-          wire:confirm="Are you sure you want to publish this film? This cannot be reverted."
+          wire:confirm="Are you sure you want to publish this show? This cannot be reverted."
           variant="ghost"
           wire:click="publish">
           Publish
@@ -171,7 +191,7 @@ new class extends Component
           tooltip="This hides from listing pages and searches."
           variant="ghost"
           wire:click="toggleVisibility">
-          @if($this->film->is_hidden)
+          @if($this->show->is_hidden)
             Unhide
           @else
             Hide
