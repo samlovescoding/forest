@@ -43,9 +43,9 @@ class Person extends Model
     if (isset($extension)) {
       $pictureWithExtension = str($this->picture)->beforeLast('.')->append('.', $extension);
 
-      return asset($pictureWithExtension);
+      return asset('storage/'.$pictureWithExtension);
     }
 
-    return asset($this->picture);
+    return asset('storage/'.$this->picture);
   }
 }
