@@ -17,6 +17,7 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   // People
   Route::livewire('/people', 'pages::people.index')->name('people.index');
   Route::livewire('/people/create', 'pages::people.create')->name('people.create');
+  Route::livewire('/people/import', 'pages::people.import')->name('people.import');
   Route::livewire('/people/{person}/edit', 'pages::people.edit')->name('people.edit');
   Route::livewire('/people/{person}', 'pages::people.view')->name('people.view');
 

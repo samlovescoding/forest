@@ -47,8 +47,9 @@ trait HasSlug
   protected static function highestSlugSuffix(string $slug, string $column, ?int $ignoreId): int
   {
     return static::slugQuery($column, $ignoreId)
-        ->where($column, 'REGEXP', '^'.preg_quote($slug).'-[0-9]+$')
+        ->where($column, 'like', $slug.'-%')
         ->pluck($column)
+        ->filter(fn (string $existing) => preg_match('/^'.preg_quote($slug, '/').'(-\d+)$/', $existing))
         ->map(fn (string $existing) => static::extractSuffix($existing))
         ->max() ?? 0;
   }

@@ -58,6 +58,12 @@ new class extends Component
         <flux:icon.eye :variant="$this->hidden ? 'solid' : 'outline'"/>
       </flux:button>
       <flux:button
+        href="{{ route('people.import') }}"
+        tooltip="Import from TMDb"
+        size="sm" wire:navigate>
+        <flux:icon name="arrow-down-tray"/>
+      </flux:button>
+      <flux:button
         href="{{ route('people.create') }}"
         tooltip="Manually add new person"
         size="sm" wire:navigate>
