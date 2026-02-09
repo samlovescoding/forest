@@ -32,40 +32,32 @@ new class extends Component
     <flux:button size="sm" href="{{ route('people.create') }}" wire:navigate>Add a Person</flux:button>
   </div>
 
-  <flux:separator variant="subtle" class="my-6" />
+  <flux:separator variant="subtle" class="my-6"/>
 
   @if($this->people->isEmpty())
-  <flux:callout icon="users" variant="secondary" heading="No people enrolled yet.">
-    Start by adding your first person.
-  </flux:callout>
+    <flux:callout icon="users" variant="secondary" heading="No people enrolled yet.">
+      Start by adding your first person.
+    </flux:callout>
   @else
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-    @foreach($this->people as $person)
-    @php($pictureUrl = $person->pictureUrl())
-    <a href="{{ route('people.view', $person) }}" wire:navigate class="block h-full">
-      <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0">
-        <div class="aspect-square w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
-          @if($pictureUrl)
-          <x-picture
-            :src="$pictureUrl"
-            :alt="$person->name"
-            picture-class="block size-full"
-            img-class="size-full object-cover"
-            icon="user" />
-          @else
-          <div class="flex size-full items-center justify-center">
-            <flux:icon name="user" variant="solid" class="size-10 text-zinc-500 dark:text-zinc-400" />
-          </div>
-          @endif
-        </div>
-        <div class="min-w-0 p-4 pt-0">
-          <flux:heading size="sm" class="truncate">{{ $person->name }}</flux:heading>
-        </div>
-      </flux:card>
-    </a>
-    @endforeach
-  </div>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+      @foreach($this->people as $person)
+        <a href="{{ route('people.view', $person) }}" wire:navigate class="block h-full">
+          <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0">
+            <div class="aspect-square w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+              <x-picture
+                :src="$person->pictureUrl(...)"
+                :alt="$person->name"
+                icon="user"
+              />
+            </div>
+            <div class="min-w-0 p-4 pt-0">
+              <flux:heading size="sm" class="truncate">{{ $person->name }}</flux:heading>
+            </div>
+          </flux:card>
+        </a>
+      @endforeach
+    </div>
 
-  <flux:pagination :paginator="$this->people" class="mt-6" />
+    <flux:pagination :paginator="$this->people" class="mt-6"/>
   @endif
 </div>

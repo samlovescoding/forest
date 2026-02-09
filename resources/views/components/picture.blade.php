@@ -1,84 +1,28 @@
 @props([
-'src' => null,
-'alt' => '',
-'pictureClass' => '',
-'imgClass' => '',
+    'src' => null,
+    'alt' => '',
+    'imageClass' => '',
+    'icon' => null,
+    'iconClass' => null
 ])
 
-@php
-$resolvedSrc = $src !== null && trim((string) $src) !== '' ? (string) $src : null;
-$isGif = false;
-$sourceUrls = [];
+@php $primarySource = $src(); @endphp
 
-if ($resolvedSrc !== null) {
-$parsedUrl = parse_url($resolvedSrc);
-$parsedPath = $parsedUrl['path'] ?? '';
-$extension = strtolower(pathinfo($parsedPath, PATHINFO_EXTENSION));
-$isGif = $extension === 'gif';
-
-if (! $isGif && $extension !== '') {
-$directory = pathinfo($parsedPath, PATHINFO_DIRNAME);
-$filename = pathinfo($parsedPath, PATHINFO_FILENAME);
-$normalizedDirectory = $directory === '.' ? '' : $directory;
-$basePath = $normalizedDirectory === '' ? $filename : "{$normalizedDirectory}/{$filename}";
-
-$buildVariantUrl = static function (array $urlParts, string $path): string {
-$url = '';
-
-if (isset($urlParts['scheme'])) {
-$url .= $urlParts['scheme'].'://';
-}
-
-if (isset($urlParts['host'])) {
-if (isset($urlParts['user'])) {
-$url .= $urlParts['user'];
-
-if (isset($urlParts['pass'])) {
-$url .= ':'.$urlParts['pass'];
-}
-
-$url .= '@';
-}
-
-$url .= $urlParts['host'];
-
-if (isset($urlParts['port'])) {
-$url .= ':'.$urlParts['port'];
-}
-}
-
-$url .= $path;
-
-if (isset($urlParts['query'])) {
-$url .= '?'.$urlParts['query'];
-}
-
-if (isset($urlParts['fragment'])) {
-$url .= '#'.$urlParts['fragment'];
-}
-
-return $url;
-};
-
-$sourceUrls['avif'] = $buildVariantUrl($parsedUrl, "{$basePath}.avif");
-$sourceUrls['webp'] = $buildVariantUrl($parsedUrl, "{$basePath}.webp");
-}
-}
-@endphp
-
-@if($resolvedSrc !== null)
-<picture @if($pictureClass !=='' ) class="{{ $pictureClass }}" @endif>
-  @if(! $isGif)
-  @if(isset($sourceUrls['avif']))
-  <source srcset="{{ $sourceUrls['avif'] }}" type="image/avif">
-  @endif
-  @if(isset($sourceUrls['webp']))
-  <source srcset="{{ $sourceUrls['webp'] }}" type="image/webp">
-  @endif
-  @endif
-  <img
-    src="{{ $resolvedSrc }}"
-    alt="{{ $alt }}"
-    {{ $attributes->class([$imgClass]) }} />
-</picture>
-@endif
+@isset($primarySource)
+  <picture {{ $attributes->class(['block size-full']) }}>
+    <source srcset="{{ $src('avif') }}" type="image/avif">
+    <source srcset="{{ $src('webp') }}" type="image/webp">
+    <img src="{{ $src() }}"
+         alt="{{ $alt }}"
+      {{ $attributes->class(["size-full object-cover"]) }}
+    />
+  </picture>
+@elseif(isset($icon))
+  <div class="flex size-full items-center justify-center">
+    <flux:icon
+      :name="$icon"
+      variant="solid"
+      {{  $attributes->class(['size-10 text-zinc-500 dark:text-zinc-400']) }}
+    />
+  </div>
+@endisset
