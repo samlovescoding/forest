@@ -1,24 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Storage;
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
   use WithFileUploads;
 
   public $user;
+
   public $id;
+
   public $name;
+
   public $email;
+
   public $profilePicture;
+
   public $profilePictureUrl;
+
   public $profileSuccess;
 
   public function mount()
@@ -35,14 +41,14 @@ new class extends Component
     $this->reset('profileSuccess');
     $this->resetErrorBag();
     $fields = $this->validate([
-      'name'           => 'required|string|max:255',
-      'email'          => 'required|email|unique:users,email,' . $this->user->id,
-      'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,'.$this->user->id,
+        'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:20480',
     ]);
 
     $this->user->update([
-      'name'  => $fields['name'],
-      'email' => $fields['email'],
+        'name' => $fields['name'],
+        'email' => $fields['email'],
     ]);
     $this->profileSuccess = 'Your profile has been updated successfully.';
 
@@ -57,12 +63,12 @@ new class extends Component
       Storage::delete($this->user->profile_picture);
     }
 
-    $manager = new ImageManager(new Driver());
+    $manager = new ImageManager(new Driver);
     $image = $manager->read($this->profilePicture)
-      ->cover(256, 256)
-      ->toJpeg(80);
+        ->cover(256, 256)
+        ->toJpeg(80);
 
-    $filePath = 'avatars/' . Str::uuid()->toString() . '-' . $this->user->id . '.jpg';
+    $filePath = 'avatars/'.Str::uuid()->toString().'-'.$this->user->id.'.jpg';
 
     Storage::disk('public')->put(
       $filePath,
@@ -76,8 +82,11 @@ new class extends Component
   }
 
   public $currentPassword;
+
   public $newPassword;
+
   public $newPasswordConfirmation;
+
   public $passwordSuccess;
 
   public function changePassword()
@@ -85,17 +94,17 @@ new class extends Component
     $this->resetErrorBag();
     $this->reset('passwordSuccess');
     $fields = $this->validate([
-      'currentPassword'         => 'required|string|min:8',
-      'newPassword'             => 'required|string|min:8',
-      'newPasswordConfirmation' => 'required|string|min:8|same:newPassword',
+        'currentPassword' => 'required|string|min:8',
+        'newPassword' => 'required|string|min:8',
+        'newPasswordConfirmation' => 'required|string|min:8|same:newPassword',
     ]);
 
     $user = Auth::user();
-    if (!Hash::check($fields['currentPassword'], $user->password)) {
+    if (! Hash::check($fields['currentPassword'], $user->password)) {
       $this->addError('currentPassword', 'The current password is incorrect.');
     }
 
-    if (!$this->getErrorBag()->isEmpty()) {
+    if (! $this->getErrorBag()->isEmpty()) {
       return;
     }
 

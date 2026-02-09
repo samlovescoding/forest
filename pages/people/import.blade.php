@@ -4,7 +4,7 @@ use App\Models\Person;
 use App\Services\TMDbService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 use Livewire\Attributes\Url;
 use Livewire\Component;

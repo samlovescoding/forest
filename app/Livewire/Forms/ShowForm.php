@@ -5,7 +5,7 @@ namespace App\Livewire\Forms;
 use App\Mocks\WithShowMock;
 use App\Models\Show;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 use Livewire\Attributes\Validate;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
