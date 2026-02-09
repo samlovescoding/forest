@@ -23,6 +23,9 @@ return new class extends Migration
       $table->string('birth_country');
       $table->string('birth_city');
       $table->string('picture')->nullable();
+
+      $table->boolean('is_published')->default(false);
+      $table->boolean('is_hidden')->default(false);
       $table->timestamps();
     });
   }

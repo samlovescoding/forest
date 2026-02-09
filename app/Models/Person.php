@@ -22,6 +22,8 @@ class Person extends Model
       'birth_country',
       'birth_city',
       'picture',
+      'is_published',
+      'is_hidden',
   ];
 
   public function casts(): array
@@ -29,6 +31,8 @@ class Person extends Model
     return [
         'birth_date' => 'date',
         'death_date' => 'date',
+        'is_published' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
   }
 

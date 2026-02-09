@@ -39,8 +39,8 @@ new class extends Component
 ?>
 
 <div>
-  <title>Edit Person Details</title>
-  <flux:heading size="xl" level="1">Edit Person Details</flux:heading>
+  <title>Editing {{ $this->form->name }}</title>
+  <flux:heading size="xl" level="1">Editing "{{ $this->form->name }}" details</flux:heading>
   <flux:separator variant="subtle" class="mt-4 mb-8" />
 
   <x-form class="flex flex-col gap-4" wire:submit.prevent="submit">
@@ -145,11 +145,19 @@ new class extends Component
 
     <div class="mt-4 flex items-center gap-2">
       <flux:button variant="primary" type="submit">
-        Update Person
+        Update Details
       </flux:button>
 
-      <flux:button variant="ghost" href="{{ route('people.view', $this->person) }}" wire:navigate>
+      @if(url()->previous() != url()->current())
+      <flux:button variant="ghost" href="{{ url()->previous() }}" wire:navigate>
         Cancel
+      </flux:button>
+      @endif
+
+      <flux:spacer />
+
+      <flux:button variant="ghost" type="publish">
+        Publish
       </flux:button>
     </div>
   </x-form>

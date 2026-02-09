@@ -23,16 +23,14 @@ new class extends Component
 
 
 <div class="contents">
-  <flux:sidebar sticky class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
+  <flux:sidebar collapsible sticky class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
     <flux:sidebar.nav>
       <x-sidebar-item icon="home" href="{{ route('home') }}">Home</x-sidebar-item>
-      <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
-        <x-sidebar-item href="#">Item 1</x-sidebar-item>
-        <x-sidebar-item href="#">Item 2</x-sidebar-item>
+      <flux:sidebar.group expandable icon="star" heading="Database" class="grid">
+        <x-sidebar-item href="{{ route('people.index') }}" matching="start">People</x-sidebar-item>
+        <x-sidebar-item href="#">Films</x-sidebar-item>
+        <x-sidebar-item href="#">TV Shows</x-sidebar-item>
       </flux:sidebar.group>
-      <x-sidebar-item href="{{ route('people.index') }}" icon="user-group">
-        People
-      </x-sidebar-item>
     </flux:sidebar.nav>
     <flux:sidebar.spacer />
     <flux:dropdown position="top" align="start" class="max-lg:hidden">
