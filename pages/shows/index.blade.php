@@ -75,15 +75,14 @@ new class extends Component
     @foreach($this->shows as $show)
     <a href="{{ route('shows.view', $show) }}" wire:navigate class="block h-full">
       <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
-        <div class="aspect-[2/3] w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+        <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
           @if($show->first_air_date)
           <flux:badge size="sm" class="absolute top-2 right-2">{{ $show->first_air_date->format('Y') }}</flux:badge>
           @endif
           <x-picture
             :src="$show->posterUrl(...)"
             :alt="$show->name"
-            icon="tv"
-          />
+            icon="tv" />
         </div>
         <div class="min-w-0 p-4 pt-0">
           <flux:heading size="sm" class="truncate">{{ $show->name }}</flux:heading>

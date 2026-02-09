@@ -75,15 +75,14 @@ new class extends Component
     @foreach($this->films as $film)
     <a href="{{ route('films.view', $film) }}" wire:navigate class="block h-full">
       <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
-        <div class="aspect-[2/3] w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+        <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
           @if($film->release_date)
           <flux:badge size="sm" class="absolute top-2 right-2">{{ $film->release_date->format('Y') }}</flux:badge>
           @endif
           <x-picture
             :src="$film->posterUrl(...)"
             :alt="$film->title"
-            icon="film"
-          />
+            icon="film" />
 
         </div>
         <div class="min-w-0 p-4 pt-0 flex justify-between items-center">
