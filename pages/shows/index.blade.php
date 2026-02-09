@@ -55,43 +55,50 @@ new class extends Component
       <flux:button
         tooltip="Toggle unlisted and unpublished shows"
         size="sm" wire:click="toggleVisibility">
-        <flux:icon.eye :variant="$this->hidden ? 'solid' : 'outline'" />
+        <flux:icon.eye :variant="$this->hidden ? 'solid' : 'outline'"/>
+      </flux:button>
+      <flux:button
+        href="{{ route('shows.import') }}"
+        tooltip="Import from TMDb"
+        size="sm" wire:navigate>
+        <flux:icon name="arrow-down-tray"/>
       </flux:button>
       <flux:button size="sm" href="{{ route('shows.create') }}" wire:navigate>Create</flux:button>
       <flux:input wire:model.live.debounce.1000ms="query"
-        wire:loading.class=""
-        size="sm" placeholder="Search" clearable />
+                  wire:loading.class=""
+                  size="sm" placeholder="Search" clearable/>
     </div>
   </div>
 
-  <flux:separator variant="subtle" class="my-6" />
+  <flux:separator variant="subtle" class="my-6"/>
 
   @if($this->shows->isEmpty())
-  <flux:callout icon="tv" variant="secondary" heading="No shows added yet.">
-    Start by adding your first show.
-  </flux:callout>
+    <flux:callout icon="tv" variant="secondary" heading="No shows added yet.">
+      Start by adding your first show.
+    </flux:callout>
   @else
-  <div class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-    @foreach($this->shows as $show)
-    <a href="{{ route('shows.view', $show) }}" wire:navigate class="block h-full">
-      <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
-        <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
-          @if($show->first_air_date)
-          <flux:badge size="sm" class="absolute top-2 right-2">{{ $show->first_air_date->format('Y') }}</flux:badge>
-          @endif
-          <x-picture
-            :src="$show->posterUrl(...)"
-            :alt="$show->name"
-            icon="tv" />
-        </div>
-        <div class="min-w-0 p-4 pt-0">
-          <flux:heading size="sm" class="truncate">{{ $show->name }}</flux:heading>
-        </div>
-      </flux:card>
-    </a>
-    @endforeach
-  </div>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+      @foreach($this->shows as $show)
+        <a href="{{ route('shows.view', $show) }}" wire:navigate class="block h-full">
+          <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
+            <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+              @if($show->first_air_date)
+                <flux:badge size="sm"
+                            class="absolute top-2 right-2">{{ $show->first_air_date->format('Y') }}</flux:badge>
+              @endif
+              <x-picture
+                :src="$show->posterUrl(...)"
+                :alt="$show->name"
+                icon="tv"/>
+            </div>
+            <div class="min-w-0 p-4 pt-0">
+              <flux:heading size="sm" class="truncate">{{ $show->name }}</flux:heading>
+            </div>
+          </flux:card>
+        </a>
+      @endforeach
+    </div>
 
-  <flux:pagination :paginator="$this->shows" class="mt-6" />
+    <flux:pagination :paginator="$this->shows" class="mt-6"/>
   @endif
 </div>

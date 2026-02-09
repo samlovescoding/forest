@@ -30,6 +30,7 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   // Shows
   Route::livewire('/shows', 'pages::shows.index')->name('shows.index');
   Route::livewire('/shows/create', 'pages::shows.create')->name('shows.create');
+  Route::livewire('/shows/import', 'pages::shows.import')->name('shows.import');
   Route::livewire('/shows/{show}/edit', 'pages::shows.edit')->name('shows.edit');
   Route::livewire('/shows/{show}', 'pages::shows.view')->name('shows.view');
 
