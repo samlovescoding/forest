@@ -17,14 +17,6 @@ new class extends Component
 
   public $response = null;
 
-  public function mount(): void
-  {
-    if (app()->environment('local')) {
-      $this->query = 'Breaking Bad';
-      $this->search();
-    }
-  }
-
   public function search(): void
   {
     $tmdb = new TMDbService;
