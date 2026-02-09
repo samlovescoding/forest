@@ -116,12 +116,12 @@ new class extends Component
               class="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
               New
             </div>
-          @elseif($this->film->poster_path)
-            <img src="{{ Storage::disk('public')->url($this->film->poster_path) }}"
-                 alt="{{ $this->film->title }}"
-                 class="size-full object-cover"/>
           @else
-            <flux:icon name="film" variant="solid" class="text-zinc-500 dark:text-zinc-400"/>
+            <x-picture
+              :src="$this->film->posterUrl(...)"
+              :alt="$this->film->title"
+              icon="film"
+            />
           @endif
         </div>
 
@@ -145,12 +145,12 @@ new class extends Component
               class="absolute top-2 right-2 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium">
               New
             </div>
-          @elseif($this->film->backdrop_path)
-            <img src="{{ Storage::disk('public')->url($this->film->backdrop_path) }}"
-                 alt="{{ $this->film->title }} backdrop"
-                 class="size-full object-cover"/>
           @else
-            <flux:icon name="photo" variant="solid" class="text-zinc-500 dark:text-zinc-400"/>
+            <x-picture
+              :src="$this->film->backdropUrl(...)"
+              :alt="$this->film->title . ' backdrop'"
+              icon="photo"
+            />
           @endif
         </div>
 

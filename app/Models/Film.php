@@ -40,4 +40,30 @@ class Film extends Model
   {
     return $this->belongsToMany(Genre::class);
   }
+
+  public function posterUrl(?string $extension = null, mixed $default = null): mixed
+  {
+    if (! $this->poster_path) {
+      return $default;
+    }
+
+    $path = $extension
+        ? str($this->poster_path)->beforeLast('.')->append('.', $extension)
+        : $this->poster_path;
+
+    return asset('storage/'.$path);
+  }
+
+  public function backdropUrl(?string $extension = null, mixed $default = null): mixed
+  {
+    if (! $this->backdrop_path) {
+      return $default;
+    }
+
+    $path = $extension
+        ? str($this->backdrop_path)->beforeLast('.')->append('.', $extension)
+        : $this->backdrop_path;
+
+    return asset('storage/'.$path);
+  }
 }

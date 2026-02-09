@@ -79,16 +79,11 @@ new class extends Component
           @if($film->release_date)
           <flux:badge size="sm" class="absolute top-2 right-2">{{ $film->release_date->format('Y') }}</flux:badge>
           @endif
-          @if($film->poster_path)
-          <img
-            src="{{ Storage::disk('public')->url($film->poster_path) }}"
-            alt="{{ $film->title }}"
-            class="size-full object-cover" />
-          @else
-          <div class="flex size-full items-center justify-center">
-            <flux:icon.film class="size-12 text-zinc-400" />
-          </div>
-          @endif
+          <x-picture
+            :src="$film->posterUrl(...)"
+            :alt="$film->title"
+            icon="film"
+          />
 
         </div>
         <div class="min-w-0 p-4 pt-0 flex justify-between items-center">

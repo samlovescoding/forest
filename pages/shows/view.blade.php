@@ -45,16 +45,11 @@ new class extends Component
     <div class="flex flex-col gap-4">
       <flux:card class="h-fit space-y-5 p-0 overflow-hidden">
         <div class="relative aspect-[2/3] bg-zinc-100 dark:bg-white/10">
-          @if($this->show->poster_path)
-          <img
-            src="{{ Storage::disk('public')->url($this->show->poster_path) }}"
-            alt="{{ $this->show->name }}"
-            class="size-full object-cover" />
-          @else
-          <div class="flex size-full items-center justify-center">
-            <flux:icon.tv class="size-12 text-zinc-400" />
-          </div>
-          @endif
+          <x-picture
+            :src="$this->show->posterUrl(...)"
+            :alt="$this->show->name"
+            icon="tv"
+          />
         </div>
 
         <div class="space-y-3 p-6 pt-0">
@@ -112,10 +107,11 @@ new class extends Component
     <div class="space-y-6">
       @if($this->show->backdrop_path)
       <div class="aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-white/10">
-        <img
-          src="{{ Storage::disk('public')->url($this->show->backdrop_path) }}"
-          alt="{{ $this->show->name }} backdrop"
-          class="size-full object-cover" />
+        <x-picture
+          :src="$this->show->backdropUrl(...)"
+          :alt="$this->show->name . ' backdrop'"
+          icon="photo"
+        />
       </div>
       @endif
 

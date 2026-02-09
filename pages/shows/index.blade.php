@@ -79,16 +79,11 @@ new class extends Component
           @if($show->first_air_date)
           <flux:badge size="sm" class="absolute top-2 right-2">{{ $show->first_air_date->format('Y') }}</flux:badge>
           @endif
-          @if($show->poster_path)
-          <img
-            src="{{ Storage::disk('public')->url($show->poster_path) }}"
-            alt="{{ $show->name }}"
-            class="size-full object-cover" />
-          @else
-          <div class="flex size-full items-center justify-center">
-            <flux:icon.tv class="size-12 text-zinc-400" />
-          </div>
-          @endif
+          <x-picture
+            :src="$show->posterUrl(...)"
+            :alt="$show->name"
+            icon="tv"
+          />
         </div>
         <div class="min-w-0 p-4 pt-0">
           <flux:heading size="sm" class="truncate">{{ $show->name }}</flux:heading>
