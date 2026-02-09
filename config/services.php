@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'tmdb' => [
+        'api_key' => env('TMDB_API_KEY'),
+        'language' => env('TMDB_LANGUAGE', 'en-US'),
+        'include_adult' => env('TMDB_INCLUDE_ADULT', false),
+        'region' => env('TMDB_REGION', 'US'),
+        'secure_base_url' => env('TMDB_SECURE_BASE_URL', 'https://image.tmdb.org/t/p/'),
+    ],
 ];

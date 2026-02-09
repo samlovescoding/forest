@@ -23,6 +23,7 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   // Films
   Route::livewire('/films', 'pages::films.index')->name('films.index');
   Route::livewire('/films/create', 'pages::films.create')->name('films.create');
+  Route::livewire('/films/import', 'pages::films.import')->name('films.import');
   Route::livewire('/films/{film}/edit', 'pages::films.edit')->name('films.edit');
   Route::livewire('/films/{film}', 'pages::films.view')->name('films.view');
 

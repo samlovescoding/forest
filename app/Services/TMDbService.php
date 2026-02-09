@@ -218,21 +218,16 @@ class TMDbService
   }
 
   /**
-   * Build image URL with proper size
+   * Alias for buildImageUrl for convenience
    */
-  public function buildImageUrl(string $imagePath, string $size = 'original'): string
+  public static function imageUrl($imagePath, $size = 'original')
   {
+    if (! isset($imagePath)) {
+      return '/';
+    }
     $baseUrl = config('services.tmdb.secure_base_url', 'https://image.tmdb.org/t/p/');
 
     return $baseUrl.$size.$imagePath;
-  }
-
-  /**
-   * Alias for buildImageUrl for convenience
-   */
-  public function imageUrl(string $imagePath, string $size = 'original'): string
-  {
-    return $this->buildImageUrl($imagePath, $size);
   }
 
   /**

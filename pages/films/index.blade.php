@@ -57,6 +57,12 @@ new class extends Component
         size="sm" wire:click="toggleVisibility">
         <flux:icon.eye :variant="$this->hidden ? 'solid' : 'outline'" />
       </flux:button>
+      <flux:button
+        href="{{ route('films.import') }}"
+        tooltip="Import from TMDb"
+        size="sm" wire:navigate>
+        <flux:icon name="arrow-down-tray" />
+      </flux:button>
       <flux:button size="sm" href="{{ route('films.create') }}" wire:navigate>Create</flux:button>
       <flux:input wire:model.live.debounce.1000ms="query"
         wire:loading.class=""
