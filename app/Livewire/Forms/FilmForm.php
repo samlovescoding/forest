@@ -44,6 +44,9 @@ class FilmForm extends Form
   #[Validate('nullable|image|max:10240')]
   public $backdrop;
 
+  #[Validate('nullable|array')]
+  public array $genres = [];
+
   public function store(): Film
   {
     $fields = $this->validate();
@@ -53,9 +56,12 @@ class FilmForm extends Form
     $fields['poster_path'] = $this->storePoster($slug);
     $fields['backdrop_path'] = $this->storeBackdrop($slug);
 
-    unset($fields['poster'], $fields['backdrop']);
+    unset($fields['poster'], $fields['backdrop'], $fields['genres']);
 
-    return Film::query()->create($fields);
+    $film = Film::query()->create($fields);
+    $film->genres()->sync($this->genres);
+
+    return $film;
   }
 
   public function setFilm(Film $film): void
@@ -68,6 +74,7 @@ class FilmForm extends Form
     $this->release_date = $film->release_date?->format('Y-m-d') ?? '';
     $this->tmdb_id = $film->tmdb_id;
     $this->imdb_id = $film->imdb_id ?? '';
+    $this->genres = $film->genres->pluck('id')->map(fn ($id) => (string) $id)->toArray();
     $this->poster = null;
     $this->backdrop = null;
   }
@@ -80,9 +87,10 @@ class FilmForm extends Form
     $fields['poster_path'] = $this->storePoster($slug, $this->film->poster_path);
     $fields['backdrop_path'] = $this->storeBackdrop($slug, $this->film->backdrop_path);
 
-    unset($fields['poster'], $fields['backdrop']);
+    unset($fields['poster'], $fields['backdrop'], $fields['genres']);
 
     $this->film->update($fields);
+    $this->film->genres()->sync($this->genres);
 
     return $this->film->fresh();
   }

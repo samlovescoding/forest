@@ -1,6 +1,9 @@
 <?php
 
 use App\Livewire\Forms\FilmForm;
+use App\Models\Genre;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -9,6 +12,12 @@ new class extends Component
   use WithFileUploads;
 
   public FilmForm $form;
+
+  #[Computed]
+  public function genres(): Collection
+  {
+    return Genre::query()->orderBy('name')->get();
+  }
 
   public function mount(): void
   {
@@ -86,6 +95,12 @@ new class extends Component
         placeholder="tt1234567"
         wire:model="form.imdb_id" />
     </div>
+
+    <flux:pillbox wire:model="form.genres" multiple label="Genres" searchable placeholder="Select genres...">
+      @foreach($this->genres as $genre)
+        <flux:pillbox.option value="{{ $genre->id }}">{{ $genre->name }}</flux:pillbox.option>
+      @endforeach
+    </flux:pillbox>
 
     <div class="flex flex-col lg:flex-row gap-8">
       <div class="flex items-start gap-4">

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Show extends Model
 {
@@ -37,5 +38,10 @@ class Show extends Model
         'first_air_date' => 'date',
         'last_air_date' => 'date',
     ];
+  }
+
+  public function genres(): BelongsToMany
+  {
+    return $this->belongsToMany(Genre::class);
   }
 }

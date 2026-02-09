@@ -53,6 +53,9 @@ class ShowForm extends Form
   #[Validate('nullable|image|max:10240')]
   public $backdrop;
 
+  #[Validate('nullable|array')]
+  public array $genres = [];
+
   public function store(): Show
   {
     $fields = $this->validate();
@@ -62,9 +65,12 @@ class ShowForm extends Form
     $fields['poster_path'] = $this->storePoster($slug);
     $fields['backdrop_path'] = $this->storeBackdrop($slug);
 
-    unset($fields['poster'], $fields['backdrop']);
+    unset($fields['poster'], $fields['backdrop'], $fields['genres']);
 
-    return Show::query()->create($fields);
+    $show = Show::query()->create($fields);
+    $show->genres()->sync($this->genres);
+
+    return $show;
   }
 
   public function setShow(Show $show): void
@@ -80,6 +86,7 @@ class ShowForm extends Form
     $this->last_air_date = $show->last_air_date?->format('Y-m-d') ?? '';
     $this->tmdb_id = $show->tmdb_id;
     $this->imdb_id = $show->imdb_id ?? '';
+    $this->genres = $show->genres->pluck('id')->map(fn ($id) => (string) $id)->toArray();
     $this->poster = null;
     $this->backdrop = null;
   }
@@ -92,9 +99,10 @@ class ShowForm extends Form
     $fields['poster_path'] = $this->storePoster($slug, $this->show->poster_path);
     $fields['backdrop_path'] = $this->storeBackdrop($slug, $this->show->backdrop_path);
 
-    unset($fields['poster'], $fields['backdrop']);
+    unset($fields['poster'], $fields['backdrop'], $fields['genres']);
 
     $this->show->update($fields);
+    $this->show->genres()->sync($this->genres);
 
     return $this->show->fresh();
   }

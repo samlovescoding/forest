@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Film extends Model
 {
@@ -33,5 +34,10 @@ class Film extends Model
         'is_published' => 'boolean',
         'is_hidden' => 'boolean',
     ];
+  }
+
+  public function genres(): BelongsToMany
+  {
+    return $this->belongsToMany(Genre::class);
   }
 }

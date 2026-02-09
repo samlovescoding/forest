@@ -126,6 +126,17 @@ new class extends Component
       </flux:card>
       @endif
 
+      @if($this->show->genres->isNotEmpty())
+      <flux:card>
+        <flux:heading size="sm" class="mb-2">Genres</flux:heading>
+        <div class="flex flex-wrap gap-2">
+          @foreach($this->show->genres as $genre)
+            <flux:badge>{{ $genre->name }}</flux:badge>
+          @endforeach
+        </div>
+      </flux:card>
+      @endif
+
       @if($this->show->tmdb_id || $this->show->imdb_id)
       <flux:card>
         <flux:heading size="sm" class="mb-2">External IDs</flux:heading>

@@ -74,8 +74,11 @@ new class extends Component
   <div class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
     @foreach($this->films as $film)
     <a href="{{ route('films.view', $film) }}" wire:navigate class="block h-full">
-      <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0">
+      <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
         <div class="aspect-[2/3] w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+          @if($film->release_date)
+          <flux:badge size="sm" class="absolute top-2 right-2">{{ $film->release_date->format('Y') }}</flux:badge>
+          @endif
           @if($film->poster_path)
           <img
             src="{{ Storage::disk('public')->url($film->poster_path) }}"
@@ -86,12 +89,10 @@ new class extends Component
             <flux:icon.film class="size-12 text-zinc-400" />
           </div>
           @endif
+
         </div>
-        <div class="min-w-0 p-4 pt-0">
-          <flux:heading size="sm" class="truncate">{{ $film->title }}</flux:heading>
-          @if($film->release_date)
-          <flux:text size="sm" class="mt-1">{{ $film->release_date->format('Y') }}</flux:text>
-          @endif
+        <div class="min-w-0 p-4 pt-0 flex justify-between items-center">
+          <flux:heading class="truncate">{{ $film->title }}</flux:heading>
         </div>
       </flux:card>
     </a>
