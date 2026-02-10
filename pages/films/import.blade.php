@@ -12,131 +12,137 @@ use Livewire\Component;
 
 new class extends Component
 {
-  #[Url(except: '')]
-  public string $query = '';
+    #[Url(except: '')]
+    public string $query = '';
 
-  public $response = null;
+    public $response = null;
 
-  public function search(): void
-  {
-    $tmdb = new TMDbService;
-    $this->response = $tmdb->searchMovies($this->query);
-  }
-
-  public function import(int $id)
-  {
-    $existing = Film::query()->where('tmdb_id', $id)->first();
-
-    if ($existing) {
-      $this->redirectRoute('films.view', $existing);
-
-      return;
+    public function search(): void
+    {
+        $tmdb = new TMDbService;
+        $this->response = $tmdb->searchMovies($this->query);
     }
 
-    $tmdb = new TMDbService;
-    $movieData = $tmdb->getMovie($id);
+    public function import(int $id)
+    {
+        $existing = Film::query()->where('tmdb_id', $id)->first();
 
-    $slug = Film::createSlug($movieData['title']);
+        if ($existing) {
+            $this->redirectRoute('films.view', $existing);
 
-    $posterPath = $this->storeImageFromUrl(
-      TMDbService::imageUrl($movieData['poster_path']),
-      $slug.'-poster',
-      1000,
-      1500,
-    );
+            return;
+        }
 
-    $backdropPath = $this->storeImageFromUrl(
-      TMDbService::imageUrl($movieData['backdrop_path']),
-      $slug.'-backdrop',
-      1920,
-      1080,
-    );
+        $tmdb = new TMDbService;
+        $movieData = $tmdb->getMovie($id);
 
-    $genreIds = Genre::query()
-        ->whereIn('tmdb_id', collect($movieData['genres'] ?? [])->pluck('id'))
-        ->pluck('id')
-        ->toArray();
+        $slug = Film::createSlug($movieData['title']);
 
-    $film = Film::query()->create([
-        'title' => $movieData['title'],
-        'slug' => $slug,
-        'overview' => $movieData['overview'],
-        'runtime' => $movieData['runtime'],
-        'release_date' => $movieData['release_date'],
-        'tmdb_id' => $movieData['id'],
-        'imdb_id' => $movieData['imdb_id'],
-        'poster_path' => $posterPath,
-        'backdrop_path' => $backdropPath,
-        'vote_count' => $movieData['vote_count'],
-        'vote_average' => $movieData['vote_average'],
-        'popularity' => $movieData['popularity'],
-    ]);
+        $posterPath = $this->storeImageFromUrl(
+            TMDbService::imageUrl($movieData['poster_path']),
+            $slug.'-poster',
+            1000,
+            1500,
+        );
 
-    $film->genres()->sync($genreIds);
+        $backdropPath = $this->storeImageFromUrl(
+            TMDbService::imageUrl($movieData['backdrop_path']),
+            $slug.'-backdrop',
+            1920,
+            1080,
+        );
 
-    $this->redirectRoute('films.view', $film);
-  }
+        $genreIds = Genre::query()
+            ->whereIn('tmdb_id', collect($movieData['genres'] ?? [])->pluck('id'))
+            ->pluck('id')
+            ->toArray();
 
-  private function storeImageFromUrl(string $url, string $name, int $width, int $height): ?string
-  {
-    $response = Http::get($url);
+        $film = Film::query()->create([
+            'title' => $movieData['title'],
+            'slug' => $slug,
+            'overview' => $movieData['overview'],
+            'runtime' => $movieData['runtime'],
+            'release_date' => $movieData['release_date'],
+            'tmdb_id' => $movieData['id'],
+            'imdb_id' => $movieData['imdb_id'],
+            'poster_path' => $posterPath,
+            'backdrop_path' => $backdropPath,
+            'vote_count' => $movieData['vote_count'],
+            'vote_average' => $movieData['vote_average'],
+            'popularity' => $movieData['popularity'],
+        ]);
 
-    if ($response->failed()) {
-      return null;
+        $film->genres()->sync($genreIds);
+
+        $this->redirectRoute('films.view', $film);
     }
 
-    $imageContent = $response->body();
-    $manager = new ImageManager(new Driver);
-    $storage = Storage::disk('public');
+    private function storeImageFromUrl(string $url, string $name, int $width, int $height): ?string
+    {
+        $response = Http::get($url);
 
-    $fileBase = 'films/'.$name.'.';
-    $primaryFileName = $fileBase.'jpg';
+        if ($response->failed()) {
+            return null;
+        }
 
-    $source = $manager->read($imageContent)->coverDown($width, $height, 'center');
+        $imageContent = $response->body();
+        $manager = new ImageManager(new Driver);
+        $storage = Storage::disk('public');
 
-    $storage->put($primaryFileName, $source->toJpeg(80));
-    $storage->put($fileBase.'avif', $source->toAvif(65));
-    $storage->put($fileBase.'webp', $source->toWebp(70));
-    Storage::disk('local')->put($primaryFileName, $imageContent);
+        $fileBase = 'films/'.$name.'.';
+        $primaryFileName = $fileBase.'jpg';
 
-    return $primaryFileName;
-  }
+        $source = $manager->read($imageContent)->coverDown($width, $height, 'center');
+
+        $storage->put($primaryFileName, $source->toJpeg(80));
+        $storage->put($fileBase.'avif', $source->toAvif(65));
+        $storage->put($fileBase.'webp', $source->toWebp(70));
+        Storage::disk('local')->put($primaryFileName, $imageContent);
+
+        return $primaryFileName;
+    }
 };
 ?>
 
 <main>
-  <x-form class="flex gap-2" wire:submit="search">
-    <div>
-      <flux:input wire:model="query" placeholder="Search for movies..."/>
-    </div>
-    <flux:button type="submit">Search</flux:button>
-  </x-form>
+    <x-form class="flex gap-2" wire:submit="search">
+        <div>
+            <flux:input wire:model="query" placeholder="Search for movies..."/>
+        </div>
+        <flux:button type="submit">Search</flux:button>
+        <flux:spacer/>
+        <flux:button
+                href="{{ route('films.create') }}"
+                tooltip="Manually add new film" wire:navigate>
+            <flux:icon name="pencil-square"/>
+        </flux:button>
+    </x-form>
 
-  @isset($this->response)
-    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 mt-8">
-      @foreach ($this->response['results'] as $film)
-        <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
-          <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
-            <flux:badge size="sm" class="absolute top-2 right-2">{{ $film['release_date'] }}</flux:badge>
-            <img
-              src="{{ TMDbService::imageUrl($film['poster_path'])  }}"
-              alt="Poster of {{ $film['title'] }}"
-            />
-          </div>
-          <div class="min-w-0 p-4 pt-0 flex flex-col gap-4">
-            <flux:heading class="truncate">
-              {{ $film['title'] }}
-            </flux:heading>
-            <div>
-              <flux:button size="xs"
-                           wire:confirm="Are you sure, you want to import this movie?"
-                           wire:click="import({{ $film['id'] }})">
-                Import
-              </flux:button>
-            </div>
-          </div>
-        </flux:card>
-      @endforeach
-    </div>
-  @endisset
+    @isset($this->response)
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 mt-8">
+            @foreach ($this->response['results'] as $film)
+                <flux:card size="sm" class="flex h-full flex-col gap-4 overflow-hidden p-0 relative">
+                    <div class="aspect-2/3 w-full overflow-hidden bg-zinc-100 dark:bg-white/10">
+                        <flux:badge size="sm" class="absolute top-2 right-2">{{ $film['release_date'] }}</flux:badge>
+                        <img
+                                src="{{ TMDbService::imageUrl($film['poster_path'])  }}"
+                                alt="Poster of {{ $film['title'] }}"
+                        />
+                    </div>
+                    <div class="min-w-0 p-4 pt-0 flex flex-col gap-4">
+                        <flux:heading class="truncate">
+                            {{ $film['title'] }}
+                        </flux:heading>
+                        <div>
+                            <flux:button size="xs"
+                                         wire:confirm="Are you sure, you want to import this movie?"
+                                         wire:click="import({{ $film['id'] }})">
+                                Import
+                            </flux:button>
+                        </div>
+                    </div>
+                </flux:card>
+            @endforeach
+        </div>
+    @endisset
 </main>

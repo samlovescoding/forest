@@ -118,6 +118,12 @@ new class extends Component
       <flux:input wire:model="query" placeholder="Search for TV shows..."/>
     </div>
     <flux:button type="submit">Search</flux:button>
+    <flux:spacer/>
+    <flux:button
+      href="{{ route('shows.create') }}"
+      tooltip="Manually add new show" wire:navigate>
+      <flux:icon name="pencil-square"/>
+    </flux:button>
   </x-form>
 
   @isset($this->response)

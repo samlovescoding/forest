@@ -63,12 +63,6 @@ new class extends Component
         size="sm" wire:navigate>
         <flux:icon name="arrow-down-tray"/>
       </flux:button>
-      <flux:button
-        href="{{ route('films.create') }}"
-        tooltip="Manually add new film"
-        size="sm" wire:navigate>
-        <flux:icon name="pencil-square"/>
-      </flux:button>
       <flux:input wire:model.live.debounce.1000ms="query"
                   wire:loading.class=""
                   size="sm" placeholder="Search" clearable/>
