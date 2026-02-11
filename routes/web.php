@@ -47,6 +47,12 @@ Route::middleware(['verified', 'layout:dashboard'])->group(function () {
   Route::livewire('/shows/{show}/seasons/{season}/episodes/{episode}/edit', 'pages::shows.seasons.episodes.edit')->name('episodes.edit');
   Route::livewire('/shows/{show}/seasons/{season}/episodes/{episode}', 'pages::shows.seasons.episodes.view')->name('episodes.view');
 
+  // People
+  Route::livewire('/appearances', 'pages::appearances.index')->name('appearances.index');
+  Route::livewire('/appearances/create', 'pages::appearances.create')->name('appearances.create');
+  Route::livewire('/appearances/{appearance}/edit', 'pages::appearances.edit')->name('appearances.edit');
+  Route::livewire('/appearances/{appearance}', 'pages::appearances.view')->name('appearances.view');
+
   // Route::livewire('/members', "pages::members")->name("members");
   Route::livewire('/settings', 'pages::settings')->name('settings');
 });

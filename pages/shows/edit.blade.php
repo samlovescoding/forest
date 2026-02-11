@@ -40,6 +40,15 @@ new class extends Component
     $this->show->update([
         'is_published' => true,
     ]);
+
+    $this->show->seasons()->update([
+        'is_published' => true,
+    ]);
+    $this->show->seasons()->each(function ($season) {
+      $season->episodes()->update([
+          'is_published' => true,
+      ]);
+    });
   }
 
   public function toggleVisibility(): void

@@ -26,6 +26,7 @@ new class extends Component
   <flux:sidebar collapsible sticky class="bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-700">
     <flux:sidebar.nav>
       <x-sidebar-item icon="home" href="{{ route('home') }}">Home</x-sidebar-item>
+      <x-sidebar-item icon="photo" href="{{ route('appearances.create') }}">Upload</x-sidebar-item>
       <flux:sidebar.group expandable icon="circle-stack" heading="Database" class="grid">
         <x-sidebar-item href="{{ route('people.index') }}" matching="start">People</x-sidebar-item>
         <x-sidebar-item href="{{ route('films.index') }}" matching="start">Films</x-sidebar-item>
